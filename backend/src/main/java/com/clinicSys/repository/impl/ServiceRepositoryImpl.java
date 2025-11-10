@@ -27,12 +27,10 @@ public class ServiceRepositoryImpl implements IServiceRepository {
     @Override
     public Service save(Service service) {
         if (service.getServiceID() == 0 || !entityManager.contains(service)) {
-            // New entity - persist
             entityManager.persist(service);
-            entityManager.flush(); // Ensure ID is generated
+            entityManager.flush();
             return service;
         } else {
-            // Existing entity - merge
             return entityManager.merge(service);
         }
     }

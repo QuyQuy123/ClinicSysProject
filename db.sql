@@ -437,4 +437,6 @@ VALUES
 (4, 5, 14, N'Take 1 pill/day 30min before breakfast'); -- P4, Omeprazole
 GO
 
+ALTER TABLE Medicine ADD Unit NVARCHAR(50);
+
 PRINT 'All data inserted successfully (English version)!';

@@ -57,13 +57,10 @@ public class ServiceServiceImpl implements IServiceService {
 
     @Override
     public ServiceDTO createService(CreateServiceDTO createDTO) {
-        // Check if service code already exists
         Optional<Service> existingService = serviceRepository.findByServiceCode(createDTO.serviceCode());
         if (existingService.isPresent()) {
             throw new RuntimeException("Service code already exists: " + createDTO.serviceCode());
         }
-
-        // Verify service type exists
         Optional<ServiceType> serviceTypeOpt = serviceTypeRepository.findById(createDTO.serviceTypeID());
         if (serviceTypeOpt.isEmpty()) {
             throw new RuntimeException("ServiceType not found with ID: " + createDTO.serviceTypeID());
@@ -92,16 +89,13 @@ public class ServiceServiceImpl implements IServiceService {
         if (updateDTO.serviceName() != null && !updateDTO.serviceName().isEmpty()) {
             service.setName(updateDTO.serviceName());
         }
-
         if (updateDTO.serviceTypeID() != null) {
-            // Verify service type exists
             Optional<ServiceType> serviceTypeOpt = serviceTypeRepository.findById(updateDTO.serviceTypeID());
             if (serviceTypeOpt.isEmpty()) {
                 throw new RuntimeException("ServiceType not found with ID: " + updateDTO.serviceTypeID());
             }
             service.setServiceTypeID(updateDTO.serviceTypeID());
         }
-
         if (updateDTO.price() != null) {
             service.setPrice(updateDTO.price());
         }
@@ -109,7 +103,6 @@ public class ServiceServiceImpl implements IServiceService {
         if (updateDTO.status() != null && !updateDTO.status().isEmpty()) {
             service.setStatus(updateDTO.status());
         }
-
         Service updatedService = serviceRepository.save(service);
         return convertToDTO(updatedService);
     }
@@ -128,7 +121,6 @@ public class ServiceServiceImpl implements IServiceService {
     }
 
     private ServiceDTO convertToDTO(Service service) {
-        // Get service type name
         String serviceTypeName = "Unknown";
         Optional<ServiceType> serviceTypeOpt = serviceTypeRepository.findById(service.getServiceTypeID());
         if (serviceTypeOpt.isPresent()) {

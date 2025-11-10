@@ -27,12 +27,10 @@ public class UserRepositoryImpl implements IUserRepository {
     @Override
     public User save(User user) {
         if (user.getUserID() == 0 || !entityManager.contains(user)) {
-            // New entity - persist
             entityManager.persist(user);
-            entityManager.flush(); // Ensure ID is generated
+            entityManager.flush();
             return user;
         } else {
-            // Existing entity - merge
             return entityManager.merge(user);
         }
     }

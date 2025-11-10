@@ -47,7 +47,6 @@ function UpdateStaff() {
         }
 
         try {
-            // Chuyển đổi roleName thành roleID
             const roleID = roleName === 'Doctor' ? 2 : roleName === 'Receptionist' ? 3 : null;
             if (!roleID) {
                 setError('Role không hợp lệ');

@@ -29,12 +29,10 @@ public class BillRepositoryImpl implements IBillRepository {
     @Override
     public Bill save(Bill bill) {
         if (bill.getBillID() == 0 || !entityManager.contains(bill)) {
-            // New entity - persist
             entityManager.persist(bill);
-            entityManager.flush(); // Ensure ID is generated
+            entityManager.flush();
             return bill;
         } else {
-            // Existing entity - merge
             return entityManager.merge(bill);
         }
     }

@@ -28,12 +28,10 @@ public class PatientRepositoryImpl implements IPatientRepository {
     @Override
     public Patient save(Patient patient) {
         if (patient.getPatientID() == 0 || !entityManager.contains(patient)) {
-            // New entity - persist
             entityManager.persist(patient);
-            entityManager.flush(); // Ensure ID is generated
+            entityManager.flush();
             return patient;
         } else {
-            // Existing entity - merge
             return entityManager.merge(patient);
         }
     }

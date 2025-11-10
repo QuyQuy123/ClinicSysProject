@@ -57,7 +57,6 @@ function AdminDashboard() {
     }
 
     const formatCurrency = (amount) => {
-        // Chuyển đổi từ BigDecimal (số) sang định dạng tiền tệ
         const numAmount = typeof amount === 'number' ? amount : parseFloat(amount) || 0;
         return new Intl.NumberFormat('vi-VN').format(numAmount) + ' đ';
     };

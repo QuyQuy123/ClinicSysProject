@@ -2,7 +2,6 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 
-// --- Import các layout và trang mới ---
 import AdminLayout from './components/layout/AdminLayout';
 import AdminDashboard from './pages/AdminDashboard';
 import StaffList from './pages/StaffList';
@@ -11,12 +10,12 @@ import UpdateStaff from './pages/UpdateStaff';
 import ServiceList from './pages/ServiceList';
 import AddService from './pages/AddService';
 import UpdateService from './pages/UpdateService';
-// (Bạn có thể làm tương tự cho Receptionist/Doctor Layout...)
+import MedicineList from './pages/MedicineList';
+import AddMedicine from './pages/AddMedicine';
+import UpdateMedicine from './pages/UpdateMedicine';
 
-// (Các component placeholder cũ)
 function DoctorDashboard() { return <div><h1>Doctor Dashboard</h1></div>; }
 function ReceptionistDashboard() { return <div><h1>Receptionist Dashboard</h1></div>; }
-// function AdminDashboard() { return <div><h1>Admin Dashboard</h1></div>; } // Đã import
 function ForgotPassword() { return <div><h1>Quên mật khẩu</h1></div>; }
 
 
@@ -36,6 +35,9 @@ export default function App() {
                 <Route path="services" element={<ServiceList />} />
                 <Route path="services/new" element={<AddService />} />
                 <Route path="services/edit/:id" element={<UpdateService />} />
+                <Route path="medicines" element={<MedicineList />} />
+                <Route path="medicines/new" element={<AddMedicine />} />
+                <Route path="medicines/edit/:id" element={<UpdateMedicine />} />
                 {/* (Thêm các route admin khác ở đây) */}
             </Route>
 

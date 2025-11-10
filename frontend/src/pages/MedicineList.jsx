@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getAllServices, getAllServiceTypes, updateServiceStatus } from '../services/serviceService';
-import './ServiceList.css';
+import { getAllMedicines, getAllMedicineGroups, updateMedicineStatus } from '../services/medicineService';
+import './MedicineList.css';
 
-function ServiceList() {
-    const [services, setServices] = useState([]);
-    const [serviceTypes, setServiceTypes] = useState([]);
-    const [filteredServices, setFilteredServices] = useState([]);
+function MedicineList() {
+    const [medicines, setMedicines] = useState([]);
+    const [medicineGroups, setMedicineGroups] = useState([]);
+    const [filteredMedicines, setFilteredMedicines] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
-    const [typeFilter, setTypeFilter] = useState('all');
+    const [groupFilter, setGroupFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [servicesData, typesData] = await Promise.all([
-                    getAllServices(),
-                    getAllServiceTypes()
+                const [medicinesData, groupsData] = await Promise.all([
+                    getAllMedicines(),
+                    getAllMedicineGroups()
                 ]);
-                setServices(servicesData);
-                setFilteredServices(servicesData);
-                setServiceTypes(typesData);
+                setMedicines(medicinesData);
+                setFilteredMedicines(medicinesData);
+                setMedicineGroups(groupsData);
             } catch (err) {
-                const errorMessage = err.response?.data?.message || err.message || 'Không thể tải danh sách dịch vụ. Vui lòng thử lại.';
+                const errorMessage = err.response?.data?.message || err.message || 'Không thể tải danh sách thuốc. Vui lòng thử lại.';
                 setError(errorMessage);
-                console.error('Error fetching services:', err);
+                console.error('Error fetching medicines:', err);
                 console.error('Error response:', err.response);
             } finally {
                 setLoading(false);
@@ -35,52 +35,61 @@ function ServiceList() {
         };
         fetchData();
     }, []);
+
     useEffect(() => {
-        let filtered = [...services];
+        let filtered = [...medicines];
         if (searchTerm) {
             const term = searchTerm.toLowerCase();
-            filtered = filtered.filter(s => 
-                s.serviceName.toLowerCase().includes(term) || 
-                s.serviceCode.toLowerCase().includes(term)
+            filtered = filtered.filter(m => 
+                m.medicineName.toLowerCase().includes(term) || 
+                m.medicineCode.toLowerCase().includes(term)
             );
         }
-        if (typeFilter !== 'all') {
-            const typeId = parseInt(typeFilter);
-            filtered = filtered.filter(s => s.serviceTypeID === typeId);
+
+        if (groupFilter !== 'all') {
+            const groupId = parseInt(groupFilter);
+            filtered = filtered.filter(m => m.medicineGroupID === groupId);
         }
+
         if (statusFilter !== 'all') {
-            filtered = filtered.filter(s => 
-                s.status.toLowerCase() === statusFilter.toLowerCase()
+            filtered = filtered.filter(m => 
+                m.status.toLowerCase() === statusFilter.toLowerCase()
             );
         }
 
-        setFilteredServices(filtered);
-    }, [searchTerm, typeFilter, statusFilter, services]);
+        setFilteredMedicines(filtered);
+    }, [searchTerm, groupFilter, statusFilter, medicines]);
 
-    const handleStatusChange = async (serviceId, currentStatus) => {
+    const handleStatusChange = async (medicineId, currentStatus) => {
         const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
         
-        if (!window.confirm(`Bạn có chắc muốn ${newStatus === 'Active' ? 'kích hoạt' : 'vô hiệu hóa'} dịch vụ này?`)) {
+        if (!window.confirm(`Bạn có chắc muốn ${newStatus === 'Active' ? 'kích hoạt' : 'vô hiệu hóa'} thuốc này?`)) {
             return;
         }
 
         try {
-            await updateServiceStatus(serviceId, newStatus);
-            const data = await getAllServices();
-            setServices(data);
+            await updateMedicineStatus(medicineId, newStatus);
+            const data = await getAllMedicines();
+            setMedicines(data);
         } catch (err) {
-            alert('Không thể cập nhật trạng thái dịch vụ. Vui lòng thử lại.');
-            console.error('Error updating service status:', err);
+            alert('Không thể cập nhật trạng thái thuốc. Vui lòng thử lại.');
+            console.error('Error updating medicine status:', err);
         }
     };
 
-    const handleEdit = (serviceId) => {
-        navigate(`/admin/services/edit/${serviceId}`);
+    const handleEdit = (medicineId) => {
+        navigate(`/admin/medicines/edit/${medicineId}`);
     };
 
     const formatCurrency = (amount) => {
         const numAmount = typeof amount === 'number' ? amount : parseFloat(amount) || 0;
         return new Intl.NumberFormat('vi-VN').format(numAmount);
+    };
+
+    const getStockClass = (stock) => {
+        if (stock === 0) return 'stock-zero';
+        if (stock < 10) return 'stock-low';
+        return '';
     };
 
     if (loading) {
@@ -100,20 +109,20 @@ function ServiceList() {
     }
 
     return (
-        <div className="service-list">
-            <h1>Service List</h1>
+        <div className="medicine-list">
+            <h1>Medicine List</h1>
 
             <div className="card">
                 <div className="controls-bar">
                     <select
-                        id="typeFilter"
-                        value={typeFilter}
-                        onChange={(e) => setTypeFilter(e.target.value)}
+                        id="groupFilter"
+                        value={groupFilter}
+                        onChange={(e) => setGroupFilter(e.target.value)}
                     >
-                        <option value="all">-- All Service Types --</option>
-                        {serviceTypes.map(type => (
-                            <option key={type.serviceTypeID} value={type.serviceTypeID}>
-                                {type.typeName}
+                        <option value="all">-- All Medicine Groups --</option>
+                        {medicineGroups.map(group => (
+                            <option key={group.medicineGroupID} value={group.medicineGroupID}>
+                                {group.name}
                             </option>
                         ))}
                     </select>
@@ -136,39 +145,47 @@ function ServiceList() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     
-                    <Link to="/admin/services/new" className="add-btn">
-                        New Service
+                    <Link to="/admin/medicines/new" className="add-btn">
+                        New Medicine
                     </Link>
                 </div>
 
                 <table>
                     <thead>
                         <tr>
-                            <th>Service Code</th>
-                            <th>Service Name</th>
-                            <th>Service Type</th>
+                            <th>Medicine Code</th>
+                            <th>Medicine Name</th>
+                            <th>Medicine Group</th>
+                            <th>Strength</th>
+                            <th>Unit</th>
                             <th>Price</th>
+                            <th>Stock</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredServices.length === 0 ? (
+                        {filteredMedicines.length === 0 ? (
                             <tr>
-                                <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
-                                    Không tìm thấy dịch vụ nào
+                                <td colSpan="9" style={{ textAlign: 'center', padding: '20px' }}>
+                                    Không tìm thấy thuốc nào
                                 </td>
                             </tr>
                         ) : (
-                            filteredServices.map(service => (
-                                <tr key={service.serviceID}>
-                                    <td>{service.serviceCode}</td>
-                                    <td>{service.serviceName}</td>
-                                    <td>{service.serviceTypeName}</td>
-                                    <td>{formatCurrency(service.price)} đ</td>
+                            filteredMedicines.map(medicine => (
+                                <tr key={medicine.medicineID}>
+                                    <td>{medicine.medicineCode}</td>
+                                    <td>{medicine.medicineName}</td>
+                                    <td>{medicine.medicineGroupName}</td>
+                                    <td>{medicine.strength || '-'}</td>
+                                    <td>{medicine.unit || '-'}</td>
+                                    <td>{formatCurrency(medicine.price)} đ</td>
+                                    <td className={getStockClass(medicine.stock)}>
+                                        {medicine.stock}
+                                    </td>
                                     <td>
-                                        <span className={`status-badge ${service.status === 'Active' ? 'status-active' : 'status-inactive'}`}>
-                                            {service.status}
+                                        <span className={`status-badge ${medicine.status === 'Active' ? 'status-active' : 'status-inactive'}`}>
+                                            {medicine.status}
                                         </span>
                                     </td>
                                     <td className="action-links">
@@ -177,18 +194,18 @@ function ServiceList() {
                                             className="edit-link"
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                handleEdit(service.serviceID);
+                                                handleEdit(medicine.medicineID);
                                             }}
                                         >
                                             Edit
                                         </a>
-                                        {service.status === 'Active' ? (
+                                        {medicine.status === 'Active' ? (
                                             <a 
                                                 href="#" 
                                                 className="deactivate-link"
                                                 onClick={(e) => {
                                                     e.preventDefault();
-                                                    handleStatusChange(service.serviceID, service.status);
+                                                    handleStatusChange(medicine.medicineID, medicine.status);
                                                 }}
                                             >
                                                 Deactivate
@@ -199,7 +216,7 @@ function ServiceList() {
                                                 className="activate-link"
                                                 onClick={(e) => {
                                                     e.preventDefault();
-                                                    handleStatusChange(service.serviceID, service.status);
+                                                    handleStatusChange(medicine.medicineID, medicine.status);
                                                 }}
                                             >
                                                 Activate
@@ -216,5 +233,5 @@ function ServiceList() {
     );
 }
 
-export default ServiceList;
+export default MedicineList;
 

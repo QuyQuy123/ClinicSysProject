@@ -29,11 +29,8 @@ function StaffList() {
         fetchStaff();
     }, []);
 
-    // Filter staff khi search term, role filter, hoặc status filter thay đổi
     useEffect(() => {
         let filtered = [...staff];
-
-        // Filter theo search term (name hoặc email)
         if (searchTerm) {
             const term = searchTerm.toLowerCase();
             filtered = filtered.filter(s => 
@@ -41,8 +38,6 @@ function StaffList() {
                 s.email.toLowerCase().includes(term)
             );
         }
-
-        // Filter theo role
         if (roleFilter !== 'all') {
             if (roleFilter === 'doctor') {
                 filtered = filtered.filter(s => s.roleName === 'Doctor');
@@ -51,7 +46,6 @@ function StaffList() {
             }
         }
 
-        // Filter theo status
         if (statusFilter !== 'all') {
             filtered = filtered.filter(s => 
                 s.status.toLowerCase() === statusFilter.toLowerCase()
@@ -70,7 +64,6 @@ function StaffList() {
 
         try {
             await updateStaffStatus(userId, newStatus);
-            // Cập nhật lại danh sách
             const data = await getAllStaff();
             setStaff(data);
         } catch (err) {

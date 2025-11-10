@@ -11,7 +11,6 @@ function AdminLayout() {
         logout();
         navigate('/login');
     };
-
     const isActive = (path) => {
         return location.pathname === path || location.pathname.startsWith(path + '/');
     };
@@ -44,7 +43,7 @@ function AdminLayout() {
                             </Link>
                         </li>
                         <li>
-                            <Link to="#" className={isActive('/admin/medicine') ? 'active' : ''}>
+                            <Link to="/admin/medicines" className={isActive('/admin/medicines') ? 'active' : ''}>
                                 <span className="icon">💊</span> Medicine
                             </Link>
                         </li>

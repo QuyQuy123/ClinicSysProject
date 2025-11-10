@@ -20,13 +20,8 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private IUserRepository userRepository;
 
-    // (Giả sử bạn đã có IRoleRepository)
-    // @Autowired
-    // private IRoleRepository roleRepository;
-
     @Override
     public List<UserDTO> getAllStaff() {
-        // Lấy tất cả User, chuyển đổi sang UserDTO
         return userRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -34,17 +29,12 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserDTO createStaff(CreateUserDTO userDTO) {
-        // (Đây là logic đơn giản hóa, bạn nên kiểm tra email tồn tại, v.v.)
-
         User newUser = new User();
         newUser.setFullName(userDTO.fullName());
         newUser.setEmail(userDTO.email());
-        newUser.setUsername(userDTO.email()); // Dùng email làm username
+        newUser.setUsername(userDTO.email());
         newUser.setRole(userDTO.roleID());
-        newUser.setStatus("Active"); // Đặt Active luôn
-
-        // !!! Đặt mật khẩu mặc định (ĐÃ MÃ HÓA) !!!
-        // VÌ BẠN ĐANG DÙNG NoOpPasswordEncoder, nên mật khẩu là text thuần
+        newUser.setStatus("Active");
         newUser.setPasswordHash("default123");
 
         User savedUser = userRepository.save(newUser);
@@ -106,18 +96,15 @@ public class UserServiceImpl implements IUserService {
         }
         
         User user = userOpt.get();
-        // Reset về mật khẩu mặc định
         user.setPasswordHash("default123");
         userRepository.save(user);
     }
-
-    // Hàm tiện ích để chuyển đổi Entity -> DTO
     private UserDTO convertToDTO(User user) {
         return new UserDTO(
                 user.getUserID(),
                 user.getFullName(),
                 user.getEmail(),
-                user.getRoleString(), // Dùng hàm getRoleString() bạn đã viết
+                user.getRoleString(),
                 user.getStatus()
         );
     }

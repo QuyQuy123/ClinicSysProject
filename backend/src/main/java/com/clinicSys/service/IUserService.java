@@ -13,5 +13,5 @@ public interface IUserService {
     UserDTO updateStaff(int userId, UpdateUserDTO updateDTO);
     UserDTO updateStaffStatus(int userId, UpdateUserStatusDTO updateDTO);
     void resetPassword(int userId);
-    // (Chúng ta sẽ làm Delete sau)
+
 }

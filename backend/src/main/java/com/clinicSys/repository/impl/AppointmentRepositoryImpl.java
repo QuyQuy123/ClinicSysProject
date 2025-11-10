@@ -28,12 +28,10 @@ public class AppointmentRepositoryImpl implements IAppointmentRepository {
     @Override
     public Appointment save(Appointment appointment) {
         if (appointment.getAppointmentID() == 0 || !entityManager.contains(appointment)) {
-            // New entity - persist
             entityManager.persist(appointment);
-            entityManager.flush(); // Ensure ID is generated
+            entityManager.flush();
             return appointment;
         } else {
-            // Existing entity - merge
             return entityManager.merge(appointment);
         }
     }
