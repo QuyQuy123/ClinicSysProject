@@ -8,6 +8,9 @@ import AdminDashboard from './pages/AdminDashboard';
 import StaffList from './pages/StaffList';
 import AddStaff from './pages/AddStaff';
 import UpdateStaff from './pages/UpdateStaff';
+import ServiceList from './pages/ServiceList';
+import AddService from './pages/AddService';
+import UpdateService from './pages/UpdateService';
 // (Bạn có thể làm tương tự cho Receptionist/Doctor Layout...)
 
 // (Các component placeholder cũ)
@@ -30,6 +33,9 @@ export default function App() {
                 <Route path="staff" element={<StaffList />} />
                 <Route path="staff/new" element={<AddStaff />} />
                 <Route path="staff/edit/:id" element={<UpdateStaff />} />
+                <Route path="services" element={<ServiceList />} />
+                <Route path="services/new" element={<AddService />} />
+                <Route path="services/edit/:id" element={<UpdateService />} />
                 {/* (Thêm các route admin khác ở đây) */}
             </Route>
 

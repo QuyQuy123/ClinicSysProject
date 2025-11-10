@@ -39,7 +39,7 @@ function AdminLayout() {
                             </Link>
                         </li>
                         <li>
-                            <Link to="#" className={isActive('/admin/services') ? 'active' : ''}>
+                            <Link to="/admin/services" className={isActive('/admin/services') ? 'active' : ''}>
                                 <span className="icon">💼</span> Services
                             </Link>
                         </li>
