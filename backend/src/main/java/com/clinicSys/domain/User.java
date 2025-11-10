@@ -51,7 +51,14 @@ public class User implements UserDetails {
 	private String status;
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority("ROLE_" + this.role));
+		// Chuyển đổi role ID thành role name (ADMIN, DOCTOR, RECEPTIONIST)
+		String roleName = switch (this.role) {
+			case 1 -> "ADMIN";
+			case 2 -> "DOCTOR";
+			case 3 -> "RECEPTIONIST";
+			default -> "UNKNOWN";
+		};
+		return List.of(new SimpleGrantedAuthority("ROLE_" + roleName));
 	}
 	@Override
 	public String getPassword() {

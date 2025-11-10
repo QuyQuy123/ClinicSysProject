@@ -1,31 +1,46 @@
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 
-// Placeholder components cho các route khác
-function DoctorDashboard() {
-    return <div><h1>Doctor Dashboard</h1><p>Chào mừng Bác sĩ!</p></div>;
-}
+// --- Import các layout và trang mới ---
+import AdminLayout from './components/layout/AdminLayout';
+import AdminDashboard from './pages/AdminDashboard';
+import StaffList from './pages/StaffList';
+import AddStaff from './pages/AddStaff';
+import UpdateStaff from './pages/UpdateStaff';
+// (Bạn có thể làm tương tự cho Receptionist/Doctor Layout...)
 
-function ReceptionistDashboard() {
-    return <div><h1>Receptionist Dashboard</h1><p>Chào mừng Lễ tân!</p></div>;
-}
+// (Các component placeholder cũ)
+function DoctorDashboard() { return <div><h1>Doctor Dashboard</h1></div>; }
+function ReceptionistDashboard() { return <div><h1>Receptionist Dashboard</h1></div>; }
+// function AdminDashboard() { return <div><h1>Admin Dashboard</h1></div>; } // Đã import
+function ForgotPassword() { return <div><h1>Quên mật khẩu</h1></div>; }
 
-function AdminDashboard() {
-    return <div><h1>Admin Dashboard</h1><p>Chào mừng Quản trị viên!</p></div>;
-}
-
-function ForgotPassword() {
-    return <div><h1>Quên mật khẩu</h1><p>Chức năng đang phát triển...</p></div>;
-}
 
 export default function App() {
     return (
         <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-            <Route path="/receptionist/dashboard" element={<ReceptionistDashboard />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            {/* Các route công khai */}
+            <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+
+            {/* --- Các Route của Admin (Dùng Layout) --- */}
+            <Route path="/admin" element={<AdminLayout />}>
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="staff" element={<StaffList />} />
+                <Route path="staff/new" element={<AddStaff />} />
+                <Route path="staff/edit/:id" element={<UpdateStaff />} />
+                {/* (Thêm các route admin khác ở đây) */}
+            </Route>
+
+            {/* --- Các Route của Doctor (Tạm thời) --- */}
+            <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+
+            {/* --- Các Route của Lễ tân (Tạm thời) --- */}
+            <Route path="/receptionist/dashboard" element={<ReceptionistDashboard />} />
+
+            {/* Route mặc định */}
+            <Route path="/" element={<Login />} />
         </Routes>
     );
 }

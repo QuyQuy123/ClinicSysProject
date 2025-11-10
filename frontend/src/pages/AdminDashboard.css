@@ -1,0 +1,139 @@
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #f4f7fc;
+    --text-color: #333;
+    --sidebar-bg: #fff;
+    --card-bg: #fff;
+    --border-color: #e0e0e0;
+    --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    --label-color: #555;
+    --input-border: #ccc;
+}
+
+.admin-dashboard {
+    font-family: 'Arial', sans-serif;
+}
+
+.admin-dashboard h1 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    color: #444;
+}
+
+.kpi-widgets {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.kpi-card {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+}
+
+.kpi-card h3 {
+    margin-top: 0;
+    font-size: 1em;
+    color: var(--label-color);
+    text-transform: uppercase;
+    font-weight: normal;
+}
+
+.kpi-card .value {
+    font-size: 2.2em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 10px 0;
+}
+
+.kpi-card .change {
+    font-size: 0.9em;
+    color: #28a745;
+}
+
+.kpi-card .change.negative {
+    color: #dc3545;
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+@media (max-width: 968px) {
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 30px;
+}
+
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    color: var(--text-color);
+}
+
+.chart-placeholder {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+    border: 1px dashed var(--border-color);
+    border-radius: 5px;
+    color: #aaa;
+    font-weight: bold;
+}
+
+.summary-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.summary-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.summary-list li:last-child {
+    border-bottom: none;
+}
+
+.summary-list .name {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.summary-list .figure {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.loading-container,
+.error-container {
+    text-align: center;
+    padding: 50px;
+}
+
+.error-container {
+    color: #dc3545;
+}
+

@@ -1,25 +1,22 @@
-import axios from 'axios';
+// import axios from 'axios'; // Bỏ dòng này
+import apiClient from './api'; // <<< THÊM DÒNG NÀY
 
-// 1. Cấu hình địa chỉ Backend
-const API_URL = 'http://localhost:8080/api/auth';
+// const API_URL = 'http://localhost:8080/api/auth'; // Bỏ dòng này
 
-// 2. Tạo hàm gọi API đăng nhập
 export const login = async (username, password) => {
     try {
-        const response = await axios.post(API_URL + '/login', {
+        // Sửa lại: Dùng apiClient và chỉ cần đường dẫn tương đối
+        const response = await apiClient.post('/auth/login', {
             username: username,
             password: password
         });
-
-        // Trả về dữ liệu (LoginResponseDTO)
         return response.data;
     } catch (error) {
         console.error('Lỗi khi gọi API đăng nhập:', error.response || error);
-        throw error; // Ném lỗi để component Login có thể bắt
+        throw error;
     }
 };
 
-// 3. Hàm đăng xuất (để dùng sau)
 export const logout = () => {
     localStorage.removeItem('clinicSysToken');
     localStorage.removeItem('clinicSysUser');
