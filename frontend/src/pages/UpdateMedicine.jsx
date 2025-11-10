@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { getMedicineById, updateMedicine, getAllMedicineGroups } from '../services/medicineService';
+import { getMedicineById, updateMedicine, getAllMedicineGroups } from '../ApiClient/medicineService';
 import './StaffForm.css';
 
 function UpdateMedicine() {

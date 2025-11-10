@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { logout } from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
 import './AdminLayout.css';
 
 function AdminLayout() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { logout, user } = useAuth();
 
     const handleLogout = () => {
         logout();
@@ -19,6 +20,16 @@ function AdminLayout() {
         <div className="admin-layout">
             <div className="sidebar">
                 <div className="logo">ClinicSys</div>
+                {user && (
+                    <div className="user-info" style={{ padding: '15px', marginBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                        <div style={{ fontSize: '14px', color: '#fff', fontWeight: 'bold' }}>
+                            {user.username}
+                        </div>
+                        <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', marginTop: '5px' }}>
+                            {user.role}
+                        </div>
+                    </div>
+                )}
                 <nav>
                     <ul>
                         <li>

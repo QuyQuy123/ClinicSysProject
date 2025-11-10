@@ -1,11 +1,7 @@
-// import axios from 'axios'; // Bỏ dòng này
-import apiClient from './api'; // <<< THÊM DÒNG NÀY
 
-// const API_URL = 'http://localhost:8080/api/auth'; // Bỏ dòng này
-
+import apiClient from './api';
 export const login = async (username, password) => {
     try {
-        // Sửa lại: Dùng apiClient và chỉ cần đường dẫn tương đối
         const response = await apiClient.post('/auth/login', {
             username: username,
             password: password
@@ -21,3 +17,4 @@ export const logout = () => {
     localStorage.removeItem('clinicSysToken');
     localStorage.removeItem('clinicSysUser');
 };
+

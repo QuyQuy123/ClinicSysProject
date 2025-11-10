@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { getStaffById, updateStaff, resetPassword } from '../services/userService';
+import { getStaffById, updateStaff, resetPassword } from '../ApiClient/userService';
 import './StaffForm.css';
 
 function UpdateStaff() {

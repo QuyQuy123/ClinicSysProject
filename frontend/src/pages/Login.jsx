@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import './Login.css';
-import { login } from '../services/authService';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
     const [username, setUsername] = useState('');
@@ -9,7 +9,17 @@ function Login() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const { login, isAuthenticated } = useAuth();
 
+    // Nếu đã đăng nhập, redirect về trang trước đó hoặc dashboard
+    useEffect(() => {
+        if (isAuthenticated()) {
+            const from = location.state?.from?.pathname || '/admin/dashboard';
+            navigate(from, { replace: true });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,19 +28,20 @@ function Login() {
 
         try {
             const response = await login(username, password);
-            localStorage.setItem('clinicSysToken', response.token);
-            localStorage.setItem('clinicSysUser', JSON.stringify({
-                username: response.username,
-                role: response.role
-            }));
-            if (response.role === "Doctor") {
-                navigate('/doctor/dashboard');
+            // Context đã xử lý việc lưu token và user vào localStorage
+            // Redirect về trang trước đó hoặc dashboard dựa trên role
+            const from = location.state?.from?.pathname;
+            
+            if (from) {
+                navigate(from, { replace: true });
+            } else if (response.role === "Doctor") {
+                navigate('/doctor/dashboard', { replace: true });
             } else if (response.role === "Receptionist") {
-                navigate('/receptionist/dashboard');
+                navigate('/receptionist/dashboard', { replace: true });
             } else if (response.role === "Admin") {
-                navigate('/admin/dashboard');
+                navigate('/admin/dashboard', { replace: true });
             } else {
-                navigate('/');
+                navigate('/', { replace: true });
             }
 
         } catch (err) {

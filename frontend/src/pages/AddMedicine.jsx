@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createMedicine, getAllMedicineGroups } from '../services/medicineService';
+import { createMedicine, getAllMedicineGroups } from '../ApiClient/medicineService';
 import './StaffForm.css';
 
 function AddMedicine() {

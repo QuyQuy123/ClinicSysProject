@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import AdminLayout from './components/layout/AdminLayout';
 import AdminDashboard from './pages/AdminDashboard';
@@ -26,8 +27,15 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
-            {/* --- Các Route của Admin (Dùng Layout) --- */}
-            <Route path="/admin" element={<AdminLayout />}>
+            {/* --- Các Route của Admin (Dùng Layout) - Yêu cầu Admin role --- */}
+            <Route 
+                path="/admin" 
+                element={
+                    <ProtectedRoute requiredRole="Admin">
+                        <AdminLayout />
+                    </ProtectedRoute>
+                }
+            >
                 <Route path="dashboard" element={<AdminDashboard />} />
                 <Route path="staff" element={<StaffList />} />
                 <Route path="staff/new" element={<AddStaff />} />
@@ -41,11 +49,25 @@ export default function App() {
                 {/* (Thêm các route admin khác ở đây) */}
             </Route>
 
-            {/* --- Các Route của Doctor (Tạm thời) --- */}
-            <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+            {/* --- Các Route của Doctor (Yêu cầu Doctor role) --- */}
+            <Route 
+                path="/doctor/dashboard" 
+                element={
+                    <ProtectedRoute requiredRole="Doctor">
+                        <DoctorDashboard />
+                    </ProtectedRoute>
+                } 
+            />
 
-            {/* --- Các Route của Lễ tân (Tạm thời) --- */}
-            <Route path="/receptionist/dashboard" element={<ReceptionistDashboard />} />
+            {/* --- Các Route của Lễ tân (Yêu cầu Receptionist role) --- */}
+            <Route 
+                path="/receptionist/dashboard" 
+                element={
+                    <ProtectedRoute requiredRole="Receptionist">
+                        <ReceptionistDashboard />
+                    </ProtectedRoute>
+                } 
+            />
 
             {/* Route mặc định */}
             <Route path="/" element={<Login />} />

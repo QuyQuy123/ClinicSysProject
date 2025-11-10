@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getAllServices, getAllServiceTypes, updateServiceStatus } from '../services/serviceService';
+import { getAllServices, getAllServiceTypes, updateServiceStatus } from '../ApiClient/serviceService';
 import './ServiceList.css';
 
 function ServiceList() {

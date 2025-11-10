@@ -12,7 +12,6 @@ export const getAllStaff = async () => {
 
 export const createStaff = async (staffData) => {
     try {
-        // (Đổi roleName thành roleID, ví dụ)
         const payload = {
             fullName: staffData.fullName,
             email: staffData.email,
@@ -58,8 +57,6 @@ export const updateStaffStatus = async (userId, status) => {
 
 export const resetPassword = async (userId) => {
     try {
-        // TODO: Tạo API endpoint cho reset password
-        // Tạm thời dùng update với password mặc định
         const response = await apiClient.put(`/admin/staff/${userId}/reset-password`);
         return response.data;
     } catch (error) {
@@ -67,3 +64,4 @@ export const resetPassword = async (userId) => {
         throw error;
     }
 };
+
