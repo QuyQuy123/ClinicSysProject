@@ -23,18 +23,13 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public LoginResponseDTO login(LoginRequestDTO request) {
-        // 1. Spring Security xác thực
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
-
-        // 2. Lấy thông tin User đã được xác thực
         User userDetails = (User) authentication.getPrincipal();
 
-        // 3. Tạo JWT Token
         String token = jwtUtil.generateToken(userDetails);
 
-        // 4. Trả về DTO chứa token và thông tin user
         return new LoginResponseDTO(token, userDetails.getUsername(), userDetails.getRoleString());
     }
 }

@@ -30,7 +30,7 @@ public class DebugController {
 		return Map.of(
 				"userID", user.getUserID(),
 				"username", user.getUsername(),
-				"passwordHash", user.getPassword(), // plain for debug only
+				"passwordHash", user.getPassword(),
 				"roleID", user.getRole(),
 				"roleStr", user.getRoleString(),
 				"status", user.getStatus(),

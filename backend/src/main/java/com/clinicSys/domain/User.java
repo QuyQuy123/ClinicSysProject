@@ -26,6 +26,7 @@ import lombok.Setter;
 @Table(name = "[User]")
 @NoArgsConstructor
 public class User implements UserDetails {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "UserID")
@@ -48,33 +49,29 @@ public class User implements UserDetails {
 
 	@Column(name = "Status")
 	private String status;
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of(new SimpleGrantedAuthority("ROLE_" + this.role));
 	}
-
 	@Override
 	public String getPassword() {
 		return this.passwordHash;
 	}
-
 	@Override
 	public String getUsername() {
 		return this.username;
 	}
-
 	@Override
 	public boolean isAccountNonExpired() { return true; }
-
 	@Override
-	public boolean isAccountNonLocked() { return "Hoạt động".equals(this.status); }
+	public boolean isAccountNonLocked() { return "Active".equals(this.status); }
 
 	@Override
 	public boolean isCredentialsNonExpired() { return true; }
 
 	@Override
-	public boolean isEnabled() { return "Hoạt động".equals(this.status); }
+	public boolean isEnabled() { return "Active".equals(this.status); }
+
 
 	public String getRoleString() {
 		return switch (this.role) {
