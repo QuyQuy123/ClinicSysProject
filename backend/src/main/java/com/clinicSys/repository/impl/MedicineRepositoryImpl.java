@@ -69,5 +69,16 @@ public class MedicineRepositoryImpl implements IMedicineRepository {
         query.setParameter("status", status);
         return query.getResultList();
     }
+
+    @Override
+    public List<Medicine> searchByName(String searchTerm) {
+        TypedQuery<Medicine> query = entityManager.createQuery(
+            "SELECT m FROM Medicine m WHERE LOWER(m.name) LIKE LOWER(:searchTerm) AND m.status = 'Active' " +
+            "ORDER BY m.name",
+            Medicine.class);
+        query.setParameter("searchTerm", "%" + searchTerm + "%");
+        query.setMaxResults(50); // Limit results
+        return query.getResultList();
+    }
 }
 

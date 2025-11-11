@@ -20,5 +20,7 @@ public interface IMedicineRepository {
     List<Medicine> findByMedicineGroupID(int medicineGroupID);
     
     List<Medicine> findByStatus(String status);
+    
+    List<Medicine> searchByName(String searchTerm);
 }
 

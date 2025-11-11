@@ -21,6 +21,16 @@ export const startConsultation = async (appointmentID) => {
 };
 
 /**
+ * Complete consultation (update appointment status to "Completed")
+ * @param {number} appointmentID Appointment ID
+ * @returns {Promise}
+ */
+export const completeConsultation = async (appointmentID) => {
+    const response = await apiClient.post(`/doctor/emr/appointment/${appointmentID}/complete`);
+    return response.data;
+};
+
+/**
  * Search ICD10 codes
  * @param {string} searchTerm Search term
  * @returns {Promise} List of ICD10 codes

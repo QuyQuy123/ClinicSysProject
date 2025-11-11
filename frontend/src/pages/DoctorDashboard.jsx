@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDoctorDashboard } from '../ApiClient/doctorService';
-import { startConsultation } from '../ApiClient/emrService';
+import { startConsultation, completeConsultation } from '../ApiClient/emrService';
 import './DoctorDashboard.css';
 
 function DoctorDashboard() {
@@ -121,6 +121,24 @@ function DoctorDashboard() {
         navigate(`/doctor/emr/${appointmentId}`);
     };
 
+    const handleCompleteConsultation = async (appointmentId) => {
+        if (window.confirm('Bạn có chắc chắn muốn hoàn thành consultation này?')) {
+            try {
+                await completeConsultation(appointmentId);
+                alert('Đã hoàn thành consultation thành công!');
+                // Refresh dashboard data
+                await fetchDashboard();
+            } catch (err) {
+                console.error('Error completing consultation:', err);
+                alert('Không thể hoàn thành consultation. Vui lòng thử lại.');
+            }
+        }
+    };
+
+    const handleViewHistory = (appointmentId) => {
+        navigate(`/doctor/emr/${appointmentId}`);
+    };
+
     if (loading) {
         return (
             <div className="loading-container">
@@ -190,25 +208,49 @@ function DoctorDashboard() {
                                     dashboardData.waitingQueue.map((appointment, index) => {
                                         const isInConsultation = appointment.status === "In Consultation" || 
                                                                   appointment.status === "in consultation";
+                                        const isCompleted = appointment.status === "Completed" || 
+                                                           appointment.status === "completed";
+                                        
                                         return (
                                             <tr key={appointment.appointmentID}>
                                                 <td>{index + 1}</td>
                                                 <td>{appointment.patientName}</td>
                                                 <td>
-                                                    {isInConsultation ? (
+                                                    {isCompleted ? (
+                                                        <span className="status-badge" style={{ backgroundColor: '#28a745', color: 'white' }}>
+                                                            Completed
+                                                        </span>
+                                                    ) : isInConsultation ? (
                                                         <span className="status-badge status-consulting">In Consultation</span>
                                                     ) : (
                                                         <span className="status-badge status-waiting">Waiting</span>
                                                     )}
                                                 </td>
                                                 <td>
-                                                    {isInConsultation ? (
+                                                    {isCompleted ? (
                                                         <button 
                                                             className="action-btn"
-                                                            onClick={() => handleReturnToEMR(appointment.appointmentID)}
+                                                            onClick={() => handleViewHistory(appointment.appointmentID)}
+                                                            style={{ backgroundColor: '#007bff' }}
                                                         >
-                                                            Working...
+                                                            View History
                                                         </button>
+                                                    ) : isInConsultation ? (
+                                                        <div style={{ display: 'flex', gap: '10px' }}>
+                                                            <button 
+                                                                className="action-btn"
+                                                                onClick={() => handleReturnToEMR(appointment.appointmentID)}
+                                                            >
+                                                                Working...
+                                                            </button>
+                                                            <button 
+                                                                className="action-btn"
+                                                                onClick={() => handleCompleteConsultation(appointment.appointmentID)}
+                                                                style={{ backgroundColor: '#28a745' }}
+                                                            >
+                                                                Done
+                                                            </button>
+                                                        </div>
                                                     ) : (
                                                         <button 
                                                             className="action-btn"

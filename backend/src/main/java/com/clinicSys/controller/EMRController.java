@@ -44,6 +44,18 @@ public class EMRController {
         }
     }
 
+    @PostMapping("/appointment/{appointmentID}/complete")
+    public ResponseEntity<?> completeConsultation(@PathVariable int appointmentID) {
+        try {
+            emrService.completeConsultation(appointmentID);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Lỗi khi hoàn thành consultation: " + e.getMessage()));
+        }
+    }
+
     @GetMapping("/icd10/search")
     public ResponseEntity<?> searchICD10Codes(@RequestParam String q) {
         try {

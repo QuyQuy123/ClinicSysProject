@@ -112,6 +112,15 @@ public class EMRServiceImpl implements IEMRService {
         appointmentRepository.save(appointment);
     }
 
+    @Override
+    public void completeConsultation(int appointmentID) {
+        Appointment appointment = appointmentRepository.findById(appointmentID)
+            .orElseThrow(() -> new RuntimeException("Appointment not found: " + appointmentID));
+        
+        appointment.setStatus("Completed");
+        appointmentRepository.save(appointment);
+    }
+
     private String getICD10Code(int codeID) {
         Optional<ICD10Code> code = icd10CodeRepository.findById(codeID);
         if (code.isPresent()) {

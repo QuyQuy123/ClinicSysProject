@@ -61,14 +61,16 @@ public class DoctorServiceImpl implements IDoctorService {
             })
             .collect(Collectors.toList());
 
-        // Get waiting queue (patients with Checked-in or In Consultation status - case-insensitive)
+        // Get waiting queue (patients with Checked-in, In Consultation, or Completed status - case-insensitive)
         List<Appointment> waitingQueueAppointments = todayAppointments.stream()
             .filter(a -> {
                 String status = a.getStatus();
                 return "Checked-in".equalsIgnoreCase(status) || 
                        "check-in".equalsIgnoreCase(status) ||
                        "In Consultation".equalsIgnoreCase(status) ||
-                       "in consultation".equalsIgnoreCase(status);
+                       "in consultation".equalsIgnoreCase(status) ||
+                       "Completed".equalsIgnoreCase(status) ||
+                       "completed".equalsIgnoreCase(status);
             })
             .collect(Collectors.toList());
 

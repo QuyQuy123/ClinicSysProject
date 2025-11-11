@@ -18,6 +18,7 @@ import DoctorDashboard from './pages/DoctorDashboard';
 import EMRPage from './pages/EMRPage';
 import NewConsultation from './pages/NewConsultation';
 import UpdateConsultation from './pages/UpdateConsultation';
+import UpdatePrescription from './pages/UpdatePrescription';
 
 function ReceptionistDashboard() { return <div><h1>Receptionist Dashboard</h1></div>; }
 function ForgotPassword() { return <div><h1>Quên mật khẩu</h1></div>; }
@@ -82,6 +83,14 @@ export default function App() {
                 element={
                     <ProtectedRoute requiredRole="Doctor">
                         <UpdateConsultation />
+                    </ProtectedRoute>
+                } 
+            />
+            <Route 
+                path="/doctor/prescription/:appointmentId/update" 
+                element={
+                    <ProtectedRoute requiredRole="Doctor">
+                        <UpdatePrescription />
                     </ProtectedRoute>
                 } 
             />

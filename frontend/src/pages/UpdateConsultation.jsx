@@ -160,8 +160,7 @@ function UpdateConsultation() {
     };
 
     const handleEditPrescription = () => {
-        // TODO: Implement edit prescription
-        alert('Chức năng chỉnh sửa đơn thuốc sẽ được triển khai sau');
+        navigate(`/doctor/prescription/${appointmentId}/update`);
     };
 
     if (loading) {

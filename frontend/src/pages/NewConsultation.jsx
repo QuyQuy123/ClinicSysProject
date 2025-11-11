@@ -130,8 +130,7 @@ function NewConsultation() {
     };
 
     const handleCreatePrescription = () => {
-        // TODO: Implement create prescription
-        alert('Chức năng tạo đơn thuốc sẽ được triển khai sau');
+        navigate(`/doctor/prescription/${appointmentId}/update`);
     };
 
     if (loading) {

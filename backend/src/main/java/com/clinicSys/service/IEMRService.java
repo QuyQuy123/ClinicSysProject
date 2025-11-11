@@ -22,6 +22,12 @@ public interface IEMRService {
     void startConsultation(int appointmentID);
     
     /**
+     * Completes consultation (updates appointment status to "Completed")
+     * @param appointmentID Appointment ID
+     */
+    void completeConsultation(int appointmentID);
+    
+    /**
      * Search ICD10 codes by code or description (case-insensitive)
      * @param searchTerm Search term
      * @return List of matching ICD10 codes
