@@ -11,6 +11,7 @@ public record VisitHistoryDTO(
     String reasonForVisit,  // From MedicalRecord.Symptoms
     String primaryDiagnosis, // From Diagnosis.Description
     String diagnosisCode,    // From ICD10Code.Code
-    String doctorName
+    String doctorName,
+    int recordID            // MedicalRecord ID to track insertion order (newest = highest ID)
 ) {}
 

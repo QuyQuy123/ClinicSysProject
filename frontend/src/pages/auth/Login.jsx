@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import './Login.css';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 function Login() {
     const [username, setUsername] = useState('');
@@ -29,12 +29,28 @@ function Login() {
         try {
             const response = await login(username, password);
             // Context đã xử lý việc lưu token và user vào localStorage
-            // Redirect về trang trước đó hoặc dashboard dựa trên role
+            // Redirect về dashboard dựa trên role (không dùng location.state để tránh redirect sai)
+            // Chỉ redirect về trang trước nếu role phù hợp
             const from = location.state?.from?.pathname;
             
+            // Kiểm tra nếu from path phù hợp với role
             if (from) {
-                navigate(from, { replace: true });
-            } else if (response.role === "Doctor") {
+                const rolePathMap = {
+                    'Doctor': '/doctor',
+                    'Admin': '/admin',
+                    'Receptionist': '/receptionist'
+                };
+                const rolePath = rolePathMap[response.role];
+                
+                // Chỉ redirect về from nếu path phù hợp với role
+                if (rolePath && from.startsWith(rolePath)) {
+                    navigate(from, { replace: true });
+                    return;
+                }
+            }
+            
+            // Redirect về dashboard theo role
+            if (response.role === "Doctor") {
                 navigate('/doctor/dashboard', { replace: true });
             } else if (response.role === "Receptionist") {
                 navigate('/receptionist/dashboard', { replace: true });

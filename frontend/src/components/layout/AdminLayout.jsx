@@ -10,7 +10,8 @@ function AdminLayout() {
 
     const handleLogout = () => {
         logout();
-        navigate('/login');
+        // Clear any location state and navigate to login
+        navigate('/login', { replace: true, state: null });
     };
     const isActive = (path) => {
         return location.pathname === path || location.pathname.startsWith(path + '/');

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { getServiceById, updateService, getAllServiceTypes } from '../ApiClient/serviceService';
+import { getServiceById, updateService, getAllServiceTypes } from '../../ApiClient/serviceService';
 import './StaffForm.css';
 
 function UpdateService() {

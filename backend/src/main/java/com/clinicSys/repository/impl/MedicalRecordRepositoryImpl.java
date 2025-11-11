@@ -52,11 +52,12 @@ public class MedicalRecordRepositoryImpl implements IMedicalRecordRepository {
     @Override
     public List<MedicalRecord> findByPatientID(int patientID) {
         // Join với Appointment để lấy records theo patientID
+        // Order by RecordID DESC to get newest records first (highest ID = newest)
         TypedQuery<MedicalRecord> query = entityManager.createQuery(
             "SELECT mr FROM MedicalRecord mr " +
             "JOIN Appointment a ON mr.appointmentID = a.appointmentID " +
             "WHERE a.patientID = :patientID " +
-            "ORDER BY a.dateTime DESC",
+            "ORDER BY mr.recordID DESC",
             MedicalRecord.class);
         query.setParameter("patientID", patientID);
         return query.getResultList();

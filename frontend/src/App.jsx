@@ -1,24 +1,33 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 
+// Auth pages
+import Login from './pages/auth/Login';
+
+// Layout
 import AdminLayout from './components/layout/AdminLayout';
-import AdminDashboard from './pages/AdminDashboard';
-import StaffList from './pages/StaffList';
-import AddStaff from './pages/AddStaff';
-import UpdateStaff from './pages/UpdateStaff';
-import ServiceList from './pages/ServiceList';
-import AddService from './pages/AddService';
-import UpdateService from './pages/UpdateService';
-import MedicineList from './pages/MedicineList';
-import AddMedicine from './pages/AddMedicine';
-import UpdateMedicine from './pages/UpdateMedicine';
-import DoctorDashboard from './pages/DoctorDashboard';
-import EMRPage from './pages/EMRPage';
-import NewConsultation from './pages/NewConsultation';
-import UpdateConsultation from './pages/UpdateConsultation';
-import UpdatePrescription from './pages/UpdatePrescription';
+import DoctorLayout from './components/layout/DoctorLayout';
+
+// Admin pages
+import AdminDashboard from './pages/admin/AdminDashboard';
+import StaffList from './pages/admin/StaffList';
+import AddStaff from './pages/admin/AddStaff';
+import UpdateStaff from './pages/admin/UpdateStaff';
+import ServiceList from './pages/admin/ServiceList';
+import AddService from './pages/admin/AddService';
+import UpdateService from './pages/admin/UpdateService';
+import MedicineList from './pages/admin/MedicineList';
+import AddMedicine from './pages/admin/AddMedicine';
+import UpdateMedicine from './pages/admin/UpdateMedicine';
+
+// Doctor pages
+import DoctorDashboard from './pages/doctor/DoctorDashboard';
+import EMRPage from './pages/doctor/EMRPage';
+import NewConsultation from './pages/doctor/NewConsultation';
+import UpdateConsultation from './pages/doctor/UpdateConsultation';
+import CreatePrescription from './pages/doctor/CreatePrescription';
+import UpdatePrescription from './pages/doctor/UpdatePrescription';
 
 function ReceptionistDashboard() { return <div><h1>Receptionist Dashboard</h1></div>; }
 function ForgotPassword() { return <div><h1>Quên mật khẩu</h1></div>; }
@@ -53,47 +62,22 @@ export default function App() {
                 {/* (Thêm các route admin khác ở đây) */}
             </Route>
 
-            {/* --- Các Route của Doctor (Yêu cầu Doctor role) --- */}
+            {/* --- Các Route của Doctor (Dùng Layout) - Yêu cầu Doctor role --- */}
             <Route 
-                path="/doctor/dashboard" 
+                path="/doctor" 
                 element={
                     <ProtectedRoute requiredRole="Doctor">
-                        <DoctorDashboard />
+                        <DoctorLayout />
                     </ProtectedRoute>
-                } 
-            />
-            <Route 
-                path="/doctor/emr/:appointmentId" 
-                element={
-                    <ProtectedRoute requiredRole="Doctor">
-                        <EMRPage />
-                    </ProtectedRoute>
-                } 
-            />
-            <Route 
-                path="/doctor/consultation/:appointmentId" 
-                element={
-                    <ProtectedRoute requiredRole="Doctor">
-                        <NewConsultation />
-                    </ProtectedRoute>
-                } 
-            />
-            <Route 
-                path="/doctor/consultation/:appointmentId/update" 
-                element={
-                    <ProtectedRoute requiredRole="Doctor">
-                        <UpdateConsultation />
-                    </ProtectedRoute>
-                } 
-            />
-            <Route 
-                path="/doctor/prescription/:appointmentId/update" 
-                element={
-                    <ProtectedRoute requiredRole="Doctor">
-                        <UpdatePrescription />
-                    </ProtectedRoute>
-                } 
-            />
+                }
+            >
+                <Route path="dashboard" element={<DoctorDashboard />} />
+                <Route path="emr/:appointmentId" element={<EMRPage />} />
+                <Route path="consultation/:appointmentId" element={<NewConsultation />} />
+                <Route path="consultation/:appointmentId/update" element={<UpdateConsultation />} />
+                <Route path="prescription/:appointmentId/create" element={<CreatePrescription />} />
+                <Route path="prescription/:appointmentId/update" element={<UpdatePrescription />} />
+            </Route>
 
             {/* --- Các Route của Lễ tân (Yêu cầu Receptionist role) --- */}
             <Route 

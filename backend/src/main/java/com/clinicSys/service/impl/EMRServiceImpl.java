@@ -88,9 +88,14 @@ public class EMRServiceImpl implements IEMRService {
                 record.getSymptoms() != null ? record.getSymptoms() : "N/A",
                 primaryDiagnosis,
                 diagnosisCode,
-                doctorName
+                doctorName,
+                record.getRecordID() // Add recordID to track insertion order
             ));
         }
+
+        // Records are already sorted by recordID DESC from repository query
+        // No need to sort again, but reverse to ensure newest first
+        // (Actually, since query already orders DESC, we keep the order as is)
 
         return new EMRDTO(
             patient.getPatientID(),

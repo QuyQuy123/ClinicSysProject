@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getEMRByAppointmentID, getConsultationData, searchICD10Codes, saveConsultation } from '../ApiClient/emrService';
+import { getEMRByAppointmentID, getConsultationData, searchICD10Codes, saveConsultation } from '../../ApiClient/emrService';
+import BackButton from '../../components/BackButton';
+import LogoutButton from '../../components/LogoutButton';
 import './NewConsultation.css';
 
 function UpdateConsultation() {
@@ -190,26 +192,8 @@ function UpdateConsultation() {
     const today = new Date().toLocaleDateString('vi-VN');
 
     return (
-        <div className="consultation-container">
-            <div className="sidebar">
-                <div className="logo">ClinicSys</div>
-                <nav>
-                    <ul>
-                        <li>
-                            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/doctor/dashboard'); }}>
-                                <span className="icon">🏠</span> Dashboard
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <span className="icon">👥</span> Patient Queue
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div className="main-content">
+        <div className="consultation-content">
+                <BackButton />
                 <div className="patient-header">
                     <div className="avatar">👤</div>
                     <div className="details">
@@ -317,7 +301,6 @@ function UpdateConsultation() {
                         </div>
                     </form>
                 </div>
-            </div>
         </div>
     );
 }

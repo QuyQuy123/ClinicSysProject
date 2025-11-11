@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getEMRByAppointmentID } from '../ApiClient/emrService';
+import { getEMRByAppointmentID } from '../../ApiClient/emrService';
+import BackButton from '../../components/BackButton';
 import './EMRPage.css';
 
 function EMRPage() {
@@ -89,26 +90,8 @@ function EMRPage() {
     const age = emrData.age || calculateAge(emrData.dateOfBirth);
 
     return (
-        <div className="emr-container">
-            <div className="sidebar">
-                <div className="logo">ClinicSys</div>
-                <nav>
-                    <ul>
-                        <li>
-                            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/doctor/dashboard'); }}>
-                                <span className="icon">🏠</span> Dashboard
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <span className="icon">👥</span> Patient Queue
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div className="main-content">
+        <div className="emr-content">
+                <BackButton />
                 <h1>Patient Electronic Medical Record (EMR)</h1>
 
                 <div className="patient-header">
@@ -143,6 +126,7 @@ function EMRPage() {
                         </thead>
                         <tbody>
                             {emrData.visitHistory && emrData.visitHistory.length > 0 ? (
+                                // Backend already returns records sorted by recordID DESC (newest first)
                                 emrData.visitHistory.map((visit) => (
                                     <tr key={visit.appointmentID}>
                                         <td>{formatDate(visit.visitDate)}</td>
@@ -174,7 +158,6 @@ function EMRPage() {
                         </tbody>
                     </table>
                 </div>
-            </div>
         </div>
     );
 }

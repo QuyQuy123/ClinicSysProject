@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getDoctorDashboard } from '../ApiClient/doctorService';
-import { startConsultation, completeConsultation } from '../ApiClient/emrService';
+import { getDoctorDashboard } from '../../ApiClient/doctorService';
+import { startConsultation, completeConsultation } from '../../ApiClient/emrService';
 import './DoctorDashboard.css';
 
 function DoctorDashboard() {
@@ -163,26 +163,7 @@ function DoctorDashboard() {
     }
 
     return (
-        <div className="doctor-dashboard-container">
-            <div className="sidebar">
-                <div className="logo">ClinicSys</div>
-                <nav>
-                    <ul>
-                        <li>
-                            <a href="#" className="active">
-                                <span className="icon">🏠</span> Dashboard
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <span className="icon">👥</span> Patient Queue
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div className="main-content">
+        <div className="doctor-dashboard-content">
                 <h1>Doctor Dashboard (Welcome, Dr. {dashboardData.doctorName}!)</h1>
 
                 <div className="dashboard-layout">
@@ -305,7 +286,6 @@ function DoctorDashboard() {
                         </table>
                     </div>
                 </div>
-            </div>
         </div>
     );
 }

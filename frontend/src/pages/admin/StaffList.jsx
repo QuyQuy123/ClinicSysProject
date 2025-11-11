@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getAllStaff, updateStaffStatus } from '../ApiClient/userService';
+import { getAllStaff, updateStaffStatus } from '../../ApiClient/userService';
 import './StaffList.css';
 
 function StaffList() {

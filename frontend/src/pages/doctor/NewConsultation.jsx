@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getEMRByAppointmentID, searchICD10Codes, saveConsultation } from '../ApiClient/emrService';
+import { getEMRByAppointmentID, searchICD10Codes, saveConsultation } from '../../ApiClient/emrService';
+import BackButton from '../../components/BackButton';
 import './NewConsultation.css';
 
 function NewConsultation() {
@@ -129,8 +130,22 @@ function NewConsultation() {
         }
     };
 
-    const handleCreatePrescription = () => {
-        navigate(`/doctor/prescription/${appointmentId}/update`);
+    const handleCreatePrescription = async () => {
+        // Auto-save consultation note first
+        try {
+            await saveConsultation({
+                appointmentID: parseInt(appointmentId),
+                vitals: vitals.trim(),
+                symptoms: symptoms.trim(),
+                notes: notes.trim(),
+                icd10CodeID: selectedDiagnosis ? selectedDiagnosis.codeID : null
+            });
+            // Navigate to Create Prescription page
+            navigate(`/doctor/prescription/${appointmentId}/create`);
+        } catch (err) {
+            console.error('Error auto-saving consultation:', err);
+            alert('Không thể tự động lưu consultation note. Vui lòng lưu thủ công trước.');
+        }
     };
 
     if (loading) {
@@ -160,26 +175,8 @@ function NewConsultation() {
     const today = new Date().toLocaleDateString('vi-VN');
 
     return (
-        <div className="consultation-container">
-            <div className="sidebar">
-                <div className="logo">ClinicSys</div>
-                <nav>
-                    <ul>
-                        <li>
-                            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/doctor/dashboard'); }}>
-                                <span className="icon">🏠</span> Dashboard
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <span className="icon">👥</span> Patient Queue
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div className="main-content">
+        <div className="consultation-content">
+                <BackButton />
                 <div className="patient-header">
                     <div className="avatar">👤</div>
                     <div className="details">
@@ -284,7 +281,6 @@ function NewConsultation() {
                         </div>
                     </form>
                 </div>
-            </div>
         </div>
     );
 }

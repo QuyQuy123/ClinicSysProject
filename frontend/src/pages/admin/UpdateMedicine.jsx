@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { createMedicine, getAllMedicineGroups } from '../ApiClient/medicineService';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { getMedicineById, updateMedicine, getAllMedicineGroups } from '../../ApiClient/medicineService';
 import './StaffForm.css';
 
-function AddMedicine() {
+function UpdateMedicine() {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [medicine, setMedicine] = useState(null);
     const [medicineCode, setMedicineCode] = useState('');
     const [medicineName, setMedicineName] = useState('');
     const [medicineGroupID, setMedicineGroupID] = useState('');
@@ -14,78 +17,102 @@ function AddMedicine() {
     const [status, setStatus] = useState('Active');
     const [medicineGroups, setMedicineGroups] = useState([]);
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
-        const fetchMedicineGroups = async () => {
+        const fetchData = async () => {
             try {
-                const groups = await getAllMedicineGroups();
-                setMedicineGroups(groups);
+                const [medicineData, groupsData] = await Promise.all([
+                    getMedicineById(parseInt(id)),
+                    getAllMedicineGroups()
+                ]);
+                setMedicine(medicineData);
+                setMedicineCode(medicineData.medicineCode || '');
+                setMedicineName(medicineData.medicineName || '');
+                setMedicineGroupID(medicineData.medicineGroupID || '');
+                setStrength(medicineData.strength || '');
+                setUnit(medicineData.unit || '');
+                setPrice(medicineData.price ? medicineData.price.toString() : '');
+                setStock(medicineData.stock ? medicineData.stock.toString() : '');
+                setStatus(medicineData.status || 'Active');
+                setMedicineGroups(groupsData);
             } catch (err) {
-                console.error('Error fetching medicine groups:', err);
+                setError('Không thể tải thông tin thuốc. Vui lòng thử lại.');
+                console.error('Error fetching medicine:', err);
+            } finally {
+                setLoading(false);
             }
         };
-        fetchMedicineGroups();
-    }, []);
+        fetchData();
+    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        setLoading(true);
+        setSaving(true);
 
-        if (!medicineName || !medicineGroupID || !unit || !price || !stock) {
+        if (!medicineName || !medicineGroupID || !unit || !price || !status) {
             setError('Vui lòng điền đầy đủ các trường bắt buộc');
-            setLoading(false);
+            setSaving(false);
             return;
         }
 
         const priceNum = parseFloat(price);
         if (isNaN(priceNum) || priceNum < 0) {
             setError('Giá thuốc phải là số hợp lệ và >= 0');
-            setLoading(false);
+            setSaving(false);
             return;
-        }
-
-        const stockNum = parseInt(stock);
-        if (isNaN(stockNum) || stockNum < 0) {
-            setError('Số lượng tồn kho phải là số nguyên hợp lệ và >= 0');
-            setLoading(false);
-            return;
-        }
-
-        let finalMedicineCode = medicineCode;
-        if (!finalMedicineCode || finalMedicineCode.trim() === '') {
-            const codePrefix = medicineName.substring(0, 4).toUpperCase().replace(/\s/g, '');
-            finalMedicineCode = `${codePrefix}-${Date.now().toString().slice(-3)}`;
         }
 
         try {
-            await createMedicine({
-                medicineCode: finalMedicineCode,
-                medicineGroupID: parseInt(medicineGroupID),
+            await updateMedicine(parseInt(id), {
                 medicineName,
+                medicineGroupID: parseInt(medicineGroupID),
                 strength: strength || null,
                 unit,
                 price: priceNum,
-                stock: stockNum,
                 status
             });
             navigate('/admin/medicines');
         } catch (err) {
-            setError(err.response?.data?.message || err.message || 'Không thể tạo thuốc. Vui lòng thử lại.');
-            console.error('Error creating medicine:', err);
+            setError(err.response?.data?.message || err.message || 'Không thể cập nhật thuốc. Vui lòng thử lại.');
+            console.error('Error updating medicine:', err);
         } finally {
-            setLoading(false);
+            setSaving(false);
         }
     };
 
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <p>Đang tải...</p>
+            </div>
+        );
+    }
+
+    if (error && !medicine) {
+        return (
+            <div className="staff-form">
+                <h1>Update Medicine</h1>
+                <div className="card">
+                    <div className="error-message">{error}</div>
+                    <div className="form-actions">
+                        <Link to="/admin/medicines">
+                            <button type="button" className="cancel-btn">Quay lại</button>
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="staff-form">
-            <h1>Add New Medicine</h1>
+            <h1>Update Medicine</h1>
 
             <div className="card">
-                <h2>New Medicine Details</h2>
+                <h2>Edit Medicine Details</h2>
                 {error && <div className="error-message">{error}</div>}
                 
                 <form onSubmit={handleSubmit}>
@@ -98,7 +125,6 @@ function AddMedicine() {
                             id="medName"
                             name="medName"
                             required
-                            placeholder="e.g., Paracetamol"
                             value={medicineName}
                             onChange={(e) => setMedicineName(e.target.value)}
                         />
@@ -106,16 +132,13 @@ function AddMedicine() {
                     
                     <div className="form-row">
                         <div className="form-group">
-                            <label htmlFor="medCode">
-                                Medicine Code <span className="optional">(Optional)</span>
-                            </label>
+                            <label htmlFor="medCode">Medicine Code</label>
                             <input
                                 type="text"
                                 id="medCode"
                                 name="medCode"
-                                placeholder="e.g., PARA-500"
                                 value={medicineCode}
-                                onChange={(e) => setMedicineCode(e.target.value)}
+                                readOnly
                             />
                         </div>
                         <div className="form-group">
@@ -146,7 +169,6 @@ function AddMedicine() {
                                 type="text"
                                 id="strength"
                                 name="strength"
-                                placeholder="e.g., 500mg"
                                 value={strength}
                                 onChange={(e) => setStrength(e.target.value)}
                             />
@@ -160,7 +182,6 @@ function AddMedicine() {
                                 id="unit"
                                 name="unit"
                                 required
-                                placeholder="e.g., Viên, Gói, Lọ"
                                 value={unit}
                                 onChange={(e) => setUnit(e.target.value)}
                             />
@@ -177,25 +198,19 @@ function AddMedicine() {
                                 id="price"
                                 name="price"
                                 required
-                                placeholder="e.g., 1000"
                                 min="0"
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="stock">
-                                Initial Stock<span className="required">*</span>
-                            </label>
+                            <label htmlFor="stock">Current Stock</label>
                             <input
                                 type="number"
                                 id="stock"
                                 name="stock"
-                                required
-                                placeholder="e.g., 100"
-                                min="0"
                                 value={stock}
-                                onChange={(e) => setStock(e.target.value)}
+                                readOnly
                             />
                         </div>
                         <div className="form-group">
@@ -216,8 +231,8 @@ function AddMedicine() {
                     </div>
 
                     <div className="form-actions">
-                        <button type="submit" className="save-btn" disabled={loading}>
-                            {loading ? 'Saving...' : 'Save Medicine'}
+                        <button type="submit" className="save-btn" disabled={saving}>
+                            {saving ? 'Saving...' : 'Save Changes'}
                         </button>
                         <Link to="/admin/medicines">
                             <button type="button" className="cancel-btn">
@@ -231,5 +246,5 @@ function AddMedicine() {
     );
 }
 
-export default AddMedicine;
+export default UpdateMedicine;
 
