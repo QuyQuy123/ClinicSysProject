@@ -61,8 +61,10 @@ public class SecurityConfig {
                         // --- PHÂN QUYỀN ADMIN ---
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                        // (Sau này thêm quyền cho Doctor/Receptionist ở đây)
-                        // .requestMatchers("/api/doctor/**").hasRole("DOCTOR")
+                        // --- PHÂN QUYỀN DOCTOR ---
+                        .requestMatchers("/api/doctor/**").hasRole("DOCTOR")
+                        
+                        // (Sau này thêm quyền cho Receptionist ở đây)
                         // .requestMatchers("/api/receptionist/**").hasRole("RECEPTIONIST")
 
                         .anyRequest().authenticated() // Tất cả API còn lại phải xác thực

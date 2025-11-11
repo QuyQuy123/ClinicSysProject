@@ -56,5 +56,28 @@ public class AppointmentRepositoryImpl implements IAppointmentRepository {
         Long result = query.getSingleResult();
         return result != null ? result : 0L;
     }
+
+    @Override
+    public List<Appointment> findByDoctorIDAndDateRange(int doctorID, LocalDateTime start, LocalDateTime end) {
+        TypedQuery<Appointment> query = entityManager.createQuery(
+            "SELECT a FROM Appointment a " +
+            "WHERE a.doctorID = :doctorID AND a.dateTime >= :start AND a.dateTime < :end " +
+            "ORDER BY a.dateTime", Appointment.class);
+        query.setParameter("doctorID", doctorID);
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Appointment> findByDoctorIDAndStatus(int doctorID, String status) {
+        TypedQuery<Appointment> query = entityManager.createQuery(
+            "SELECT a FROM Appointment a " +
+            "WHERE a.doctorID = :doctorID AND a.status = :status " +
+            "ORDER BY a.dateTime", Appointment.class);
+        query.setParameter("doctorID", doctorID);
+        query.setParameter("status", status);
+        return query.getResultList();
+    }
 }
 

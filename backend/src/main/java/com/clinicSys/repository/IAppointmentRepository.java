@@ -40,5 +40,22 @@ public interface IAppointmentRepository {
      * @return Count of appointments
      */
     Long countByDateRange(LocalDateTime startDate, LocalDateTime endDate);
+    
+    /**
+     * Finds all appointments for a specific doctor on a specific date
+     * @param doctorID Doctor ID
+     * @param start Start of the day
+     * @param end End of the day
+     * @return List of appointments
+     */
+    List<Appointment> findByDoctorIDAndDateRange(int doctorID, LocalDateTime start, LocalDateTime end);
+    
+    /**
+     * Finds appointments by doctor ID and status
+     * @param doctorID Doctor ID
+     * @param status Appointment status
+     * @return List of appointments
+     */
+    List<Appointment> findByDoctorIDAndStatus(int doctorID, String status);
 }
 

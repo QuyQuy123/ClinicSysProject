@@ -14,8 +14,11 @@ import UpdateService from './pages/UpdateService';
 import MedicineList from './pages/MedicineList';
 import AddMedicine from './pages/AddMedicine';
 import UpdateMedicine from './pages/UpdateMedicine';
+import DoctorDashboard from './pages/DoctorDashboard';
+import EMRPage from './pages/EMRPage';
+import NewConsultation from './pages/NewConsultation';
+import UpdateConsultation from './pages/UpdateConsultation';
 
-function DoctorDashboard() { return <div><h1>Doctor Dashboard</h1></div>; }
 function ReceptionistDashboard() { return <div><h1>Receptionist Dashboard</h1></div>; }
 function ForgotPassword() { return <div><h1>Quên mật khẩu</h1></div>; }
 
@@ -55,6 +58,30 @@ export default function App() {
                 element={
                     <ProtectedRoute requiredRole="Doctor">
                         <DoctorDashboard />
+                    </ProtectedRoute>
+                } 
+            />
+            <Route 
+                path="/doctor/emr/:appointmentId" 
+                element={
+                    <ProtectedRoute requiredRole="Doctor">
+                        <EMRPage />
+                    </ProtectedRoute>
+                } 
+            />
+            <Route 
+                path="/doctor/consultation/:appointmentId" 
+                element={
+                    <ProtectedRoute requiredRole="Doctor">
+                        <NewConsultation />
+                    </ProtectedRoute>
+                } 
+            />
+            <Route 
+                path="/doctor/consultation/:appointmentId/update" 
+                element={
+                    <ProtectedRoute requiredRole="Doctor">
+                        <UpdateConsultation />
                     </ProtectedRoute>
                 } 
             />
