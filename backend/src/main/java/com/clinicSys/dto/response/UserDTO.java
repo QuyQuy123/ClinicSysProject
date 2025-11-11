@@ -1,4 +1,4 @@
-package com.clinicSys.dto;
+package com.clinicSys.dto.response;
 
 // DTO để hiển thị danh sách Staff
 public record UserDTO(
@@ -8,3 +8,5 @@ public record UserDTO(
         String roleName,
         String status
 ) {}
+
+

@@ -2,10 +2,10 @@ package com.clinicSys.service.impl;
 
 import com.clinicSys.domain.Medicine;
 import com.clinicSys.domain.MedicineGroup;
-import com.clinicSys.dto.CreateMedicineDTO;
-import com.clinicSys.dto.MedicineDTO;
-import com.clinicSys.dto.MedicineGroupDTO;
-import com.clinicSys.dto.UpdateMedicineDTO;
+import com.clinicSys.dto.request.CreateMedicineDTO;
+import com.clinicSys.dto.response.MedicineDTO;
+import com.clinicSys.dto.response.MedicineGroupDTO;
+import com.clinicSys.dto.request.UpdateMedicineDTO;
 import com.clinicSys.repository.IMedicineRepository;
 import com.clinicSys.repository.IMedicineGroupRepository;
 import com.clinicSys.service.IMedicineService;

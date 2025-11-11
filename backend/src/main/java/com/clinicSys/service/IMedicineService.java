@@ -1,9 +1,9 @@
 package com.clinicSys.service;
 
-import com.clinicSys.dto.CreateMedicineDTO;
-import com.clinicSys.dto.MedicineDTO;
-import com.clinicSys.dto.MedicineGroupDTO;
-import com.clinicSys.dto.UpdateMedicineDTO;
+import com.clinicSys.dto.request.CreateMedicineDTO;
+import com.clinicSys.dto.response.MedicineDTO;
+import com.clinicSys.dto.response.MedicineGroupDTO;
+import com.clinicSys.dto.request.UpdateMedicineDTO;
 import java.util.List;
 
 public interface IMedicineService {

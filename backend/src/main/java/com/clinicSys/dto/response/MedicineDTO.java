@@ -1,4 +1,4 @@
-package com.clinicSys.dto;
+package com.clinicSys.dto.response;
 
 import java.math.BigDecimal;
 
@@ -14,4 +14,5 @@ public record MedicineDTO(
     int stock,
     String status
 ) {}
+
 

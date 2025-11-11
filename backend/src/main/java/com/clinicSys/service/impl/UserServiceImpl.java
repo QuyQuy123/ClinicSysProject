@@ -1,10 +1,10 @@
 package com.clinicSys.service.impl;
 
 import com.clinicSys.domain.User;
-import com.clinicSys.dto.CreateUserDTO;
-import com.clinicSys.dto.UpdateUserDTO;
-import com.clinicSys.dto.UpdateUserStatusDTO;
-import com.clinicSys.dto.UserDTO;
+import com.clinicSys.dto.request.CreateUserDTO;
+import com.clinicSys.dto.request.UpdateUserDTO;
+import com.clinicSys.dto.request.UpdateUserStatusDTO;
+import com.clinicSys.dto.response.UserDTO;
 import com.clinicSys.repository.IUserRepository;
 import com.clinicSys.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;

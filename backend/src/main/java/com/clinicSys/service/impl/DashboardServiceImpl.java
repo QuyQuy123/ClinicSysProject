@@ -1,6 +1,6 @@
 package com.clinicSys.service.impl;
 
-import com.clinicSys.dto.DashboardStatsDTO;
+import com.clinicSys.dto.response.DashboardStatsDTO;
 import com.clinicSys.repository.IBillRepository;
 import com.clinicSys.repository.IAppointmentRepository;
 import com.clinicSys.repository.IPatientRepository;

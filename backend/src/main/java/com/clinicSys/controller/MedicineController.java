@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.clinicSys.dto.CreateMedicineDTO;
-import com.clinicSys.dto.MedicineDTO;
-import com.clinicSys.dto.MedicineGroupDTO;
-import com.clinicSys.dto.UpdateMedicineDTO;
-import com.clinicSys.dto.UpdateUserStatusDTO;
+import com.clinicSys.dto.request.CreateMedicineDTO;
+import com.clinicSys.dto.response.MedicineDTO;
+import com.clinicSys.dto.response.MedicineGroupDTO;
+import com.clinicSys.dto.request.UpdateMedicineDTO;
+import com.clinicSys.dto.request.UpdateUserStatusDTO;
 import com.clinicSys.service.IMedicineService;
 
 @RestController

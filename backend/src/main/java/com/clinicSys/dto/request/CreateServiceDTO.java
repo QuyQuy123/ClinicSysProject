@@ -1,14 +1,13 @@
-package com.clinicSys.dto;
+package com.clinicSys.dto.request;
 
 import java.math.BigDecimal;
 
-public record ServiceDTO(
-    int serviceID,
+public record CreateServiceDTO(
     String serviceCode,
-    String serviceName,
-    String serviceTypeName,
     int serviceTypeID,
+    String serviceName,
     BigDecimal price,
     String status
 ) {}
+
 

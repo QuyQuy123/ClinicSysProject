@@ -1,9 +1,9 @@
 package com.clinicSys.service;
 
-import com.clinicSys.dto.CreateUserDTO;
-import com.clinicSys.dto.UpdateUserDTO;
-import com.clinicSys.dto.UpdateUserStatusDTO;
-import com.clinicSys.dto.UserDTO;
+import com.clinicSys.dto.request.CreateUserDTO;
+import com.clinicSys.dto.request.UpdateUserDTO;
+import com.clinicSys.dto.request.UpdateUserStatusDTO;
+import com.clinicSys.dto.response.UserDTO;
 import java.util.List;
 
 public interface IUserService {

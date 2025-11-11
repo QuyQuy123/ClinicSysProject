@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.clinicSys.config.JwtUtil;
 import com.clinicSys.domain.User;
-import com.clinicSys.dto.LoginRequestDTO;
-import com.clinicSys.dto.LoginResponseDTO;
+import com.clinicSys.dto.request.LoginRequestDTO;
+import com.clinicSys.dto.response.LoginResponseDTO;
 import com.clinicSys.service.IAuthService;
 
 @Service

@@ -2,10 +2,10 @@ package com.clinicSys.service.impl;
 
 import com.clinicSys.domain.Service;
 import com.clinicSys.domain.ServiceType;
-import com.clinicSys.dto.CreateServiceDTO;
-import com.clinicSys.dto.ServiceDTO;
-import com.clinicSys.dto.ServiceTypeDTO;
-import com.clinicSys.dto.UpdateServiceDTO;
+import com.clinicSys.dto.request.CreateServiceDTO;
+import com.clinicSys.dto.response.ServiceDTO;
+import com.clinicSys.dto.response.ServiceTypeDTO;
+import com.clinicSys.dto.request.UpdateServiceDTO;
 import com.clinicSys.repository.IServiceRepository;
 import com.clinicSys.repository.IServiceTypeRepository;
 import com.clinicSys.service.IServiceService;

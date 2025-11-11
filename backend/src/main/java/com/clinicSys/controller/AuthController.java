@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.clinicSys.dto.LoginRequestDTO;
-import com.clinicSys.dto.LoginResponseDTO;
+import com.clinicSys.dto.request.LoginRequestDTO;
+import com.clinicSys.dto.response.LoginResponseDTO;
 import com.clinicSys.service.IAuthService;
 
 @RestController
