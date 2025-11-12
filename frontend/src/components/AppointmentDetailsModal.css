@@ -1,0 +1,128 @@
+.appointment-details-modal {
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.appointment-details-modal .detail-section {
+    margin-bottom: 25px;
+}
+
+.appointment-details-modal .detail-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    color: #444;
+    border-bottom: 2px solid var(--primary-color, #4caf50);
+    padding-bottom: 8px;
+}
+
+.appointment-details-modal .detail-row {
+    display: flex;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.appointment-details-modal .detail-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.appointment-details-modal .detail-label {
+    font-weight: bold;
+    color: #555;
+    width: 180px;
+    flex-shrink: 0;
+}
+
+.appointment-details-modal .detail-value {
+    color: #333;
+    flex-grow: 1;
+}
+
+.appointment-details-modal .status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.appointment-details-modal .status-badge.status-scheduled {
+    background-color: #6c757d;
+    color: white;
+}
+
+.appointment-details-modal .status-badge.status-checked-in {
+    background-color: #007bff;
+    color: white;
+}
+
+.appointment-details-modal .status-badge.status-in-consultation {
+    background-color: #fd7e14;
+    color: white;
+}
+
+.appointment-details-modal .status-badge.status-completed {
+    background-color: #20c997;
+    color: white;
+}
+
+.appointment-details-modal .modal-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+.appointment-details-modal .checkin-btn {
+    padding: 12px 24px;
+    background-color: var(--primary-color, #4caf50);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.appointment-details-modal .checkin-btn:hover:not(:disabled) {
+    background-color: #367c39;
+}
+
+.appointment-details-modal .checkin-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.appointment-details-modal .close-btn {
+    padding: 12px 24px;
+    background-color: #ccc;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+.appointment-details-modal .close-btn:hover:not(:disabled) {
+    background-color: #bbb;
+}
+
+.appointment-details-modal .close-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.appointment-details-modal .error-message {
+    color: #d32f2f;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #ffebee;
+    border-radius: 5px;
+}
+

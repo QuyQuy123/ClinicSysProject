@@ -150,7 +150,7 @@ function ReceptionistDashboard() {
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="/receptionist/appointments">
                                 <span className="icon">📅</span> Appointments
                             </a>
                         </li>

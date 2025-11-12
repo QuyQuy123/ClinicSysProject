@@ -32,6 +32,7 @@ import UpdatePrescription from './pages/doctor/UpdatePrescription';
 // Receptionist pages
 import ReceptionistDashboard from './pages/receptionist/ReceptionistDashboard';
 import PatientList from './pages/receptionist/PatientList';
+import AppointmentList from './pages/receptionist/AppointmentList';
 
 function ForgotPassword() { return <div><h1>Quên mật khẩu</h1></div>; }
 
@@ -96,6 +97,14 @@ export default function App() {
                 element={
                     <ProtectedRoute requiredRole="Receptionist">
                         <PatientList />
+                    </ProtectedRoute>
+                } 
+            />
+            <Route 
+                path="/receptionist/appointments" 
+                element={
+                    <ProtectedRoute requiredRole="Receptionist">
+                        <AppointmentList />
                     </ProtectedRoute>
                 } 
             />

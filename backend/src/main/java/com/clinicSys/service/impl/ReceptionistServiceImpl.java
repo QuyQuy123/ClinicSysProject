@@ -3,6 +3,7 @@ package com.clinicSys.service.impl;
 import com.clinicSys.domain.Appointment;
 import com.clinicSys.domain.Patient;
 import com.clinicSys.domain.User;
+import com.clinicSys.dto.response.AppointmentDetailsDTO;
 import com.clinicSys.dto.response.AppointmentWithDoctorDTO;
 import com.clinicSys.dto.response.ReceptionistDashboardDTO;
 import com.clinicSys.repository.IAppointmentRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -206,6 +208,65 @@ public class ReceptionistServiceImpl implements IReceptionistService {
         
         // Default
         return "Waiting";
+    }
+
+    @Override
+    public List<AppointmentWithDoctorDTO> getAppointmentsByWeek(LocalDate weekStart) {
+        // Calculate week start (Monday) and end (Sunday)
+        LocalDate monday = weekStart.with(DayOfWeek.MONDAY);
+        LocalDate sunday = monday.plusDays(6);
+        
+        LocalDateTime startOfWeek = monday.atStartOfDay();
+        LocalDateTime endOfWeek = sunday.atTime(LocalTime.MAX);
+        
+        List<Appointment> appointments = appointmentRepository.findAllByDateTimeBetween(startOfWeek, endOfWeek);
+        
+        return appointments.stream()
+            .map(this::convertToAppointmentWithDoctorDTO)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public AppointmentDetailsDTO getAppointmentById(int appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+            .orElseThrow(() -> new RuntimeException("Appointment not found with ID: " + appointmentId));
+        
+        Patient patient = patientRepository.findById(appointment.getPatientID())
+            .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + appointment.getPatientID()));
+        
+        User doctor = userRepository.findById(appointment.getDoctorID())
+            .orElseThrow(() -> new RuntimeException("Doctor not found with ID: " + appointment.getDoctorID()));
+        
+        return new AppointmentDetailsDTO(
+            appointment.getAppointmentID(),
+            appointment.getDateTime(),
+            appointment.getStatus(),
+            patient.getPatientID(),
+            patient.getPatientCode(),
+            patient.getFullName(),
+            patient.getDateOfBirth(),
+            patient.getGender(),
+            patient.getAddress(),
+            patient.getPhone(),
+            patient.getEmail(),
+            appointment.getDoctorID(),
+            doctor.getFullName() != null && !doctor.getFullName().isEmpty()
+                ? doctor.getFullName()
+                : doctor.getUsername(),
+            appointment.getReceptionistID()
+        );
+    }
+
+    @Override
+    public AppointmentDetailsDTO updateAppointmentStatus(int appointmentId, String newStatus) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+            .orElseThrow(() -> new RuntimeException("Appointment not found with ID: " + appointmentId));
+        
+        appointment.setStatus(newStatus);
+        Appointment updatedAppointment = appointmentRepository.save(appointment);
+        
+        // Return updated appointment details
+        return getAppointmentById(updatedAppointment.getAppointmentID());
     }
 }
 

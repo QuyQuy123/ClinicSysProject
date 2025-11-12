@@ -156,9 +156,9 @@ function PatientList() {
                             </Link>
                         </li>
                         <li>
-                            <a href="#">
+                            <Link to="/receptionist/appointments">
                                 <span className="icon">📅</span> Appointments
-                            </a>
+                            </Link>
                         </li>
                         <li>
                             <a href="#">
