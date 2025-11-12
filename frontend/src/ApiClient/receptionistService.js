@@ -40,3 +40,41 @@ export const updateAppointmentStatus = async (appointmentId, status) => {
     return response.data;
 };
 
+/**
+ * Search patients by name
+ * @param {string} name - Patient name to search
+ * @returns {Promise} List of matching patients
+ */
+export const searchPatientsByName = async (name) => {
+    const response = await apiClient.get(`/receptionist/appointments/patients/search?name=${encodeURIComponent(name)}`);
+    return response.data;
+};
+
+/**
+ * Get all doctors
+ * @returns {Promise} List of all doctors
+ */
+export const getAllDoctors = async () => {
+    const response = await apiClient.get('/receptionist/doctors');
+    return response.data;
+};
+
+/**
+ * Get all services
+ * @returns {Promise} List of all services
+ */
+export const getAllServices = async () => {
+    const response = await apiClient.get('/receptionist/services');
+    return response.data;
+};
+
+/**
+ * Create a new appointment
+ * @param {Object} appointmentData - Appointment data (patientID, doctorID, dateTime, serviceID?, note?)
+ * @returns {Promise} Created appointment
+ */
+export const createAppointment = async (appointmentData) => {
+    const response = await apiClient.post('/receptionist/appointments', appointmentData);
+    return response.data;
+};
+

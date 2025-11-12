@@ -77,5 +77,13 @@ public class UserRepositoryImpl implements IUserRepository {
         Long result = query.getSingleResult();
         return result != null ? result : 0L;
     }
+
+    @Override
+    public List<User> findByRole(int roleID) {
+        TypedQuery<User> query = entityManager.createQuery(
+            "SELECT u FROM User u WHERE u.role = :roleID AND u.status = 'Active' ORDER BY u.fullName", User.class);
+        query.setParameter("roleID", roleID);
+        return query.getResultList();
+    }
 }
 

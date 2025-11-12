@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getReceptionistDashboard } from '../../ApiClient/receptionistService';
 import LogoutButton from '../../components/LogoutButton';
 import AddPatientModal from '../../components/AddPatientModal';
+import BookAppointmentModal from '../../components/BookAppointmentModal';
 import './ReceptionistDashboard.css';
 
 function ReceptionistDashboard() {
@@ -17,6 +18,7 @@ function ReceptionistDashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
+    const [isBookAppointmentModalOpen, setIsBookAppointmentModalOpen] = useState(false);
 
     useEffect(() => {
         fetchDashboard();
@@ -196,7 +198,7 @@ function ReceptionistDashboard() {
                 </div>
 
                 <div className="quick-actions">
-                    <button>
+                    <button onClick={() => setIsBookAppointmentModalOpen(true)}>
                         <span className="icon">➕</span> Book Appointment
                     </button>
                     <button onClick={() => setIsAddPatientModalOpen(true)}>
@@ -285,6 +287,15 @@ function ReceptionistDashboard() {
                 onClose={() => setIsAddPatientModalOpen(false)}
                 onSuccess={() => {
                     // Refresh dashboard after successful patient creation
+                    fetchDashboard();
+                }}
+            />
+
+            <BookAppointmentModal
+                isOpen={isBookAppointmentModalOpen}
+                onClose={() => setIsBookAppointmentModalOpen(false)}
+                onSuccess={() => {
+                    // Refresh dashboard after successful appointment creation
                     fetchDashboard();
                 }}
             />

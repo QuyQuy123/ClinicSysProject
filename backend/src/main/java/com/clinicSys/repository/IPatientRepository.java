@@ -59,5 +59,12 @@ public interface IPatientRepository {
      * @return List of matching patients
      */
     List<Patient> searchPatients(String searchTerm);
+    
+    /**
+     * Searches patients by name only (case-insensitive)
+     * @param name Patient name to search for
+     * @return List of matching patients
+     */
+    List<Patient> searchPatientsByName(String name);
 }
 

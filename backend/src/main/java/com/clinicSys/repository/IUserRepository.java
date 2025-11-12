@@ -56,4 +56,11 @@ public interface IUserRepository {
      * @return Total number of users
      */
     Long count();
+    
+    /**
+     * Finds all users by role ID
+     * @param roleID Role ID (2 for Doctor)
+     * @return List of users with the specified role
+     */
+    List<User> findByRole(int roleID);
 }

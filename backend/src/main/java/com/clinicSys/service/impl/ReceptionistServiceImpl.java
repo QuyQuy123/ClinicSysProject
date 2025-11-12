@@ -2,16 +2,24 @@ package com.clinicSys.service.impl;
 
 import com.clinicSys.domain.Appointment;
 import com.clinicSys.domain.Patient;
+import com.clinicSys.domain.Service;
 import com.clinicSys.domain.User;
+import com.clinicSys.dto.request.CreateAppointmentDTO;
 import com.clinicSys.dto.response.AppointmentDetailsDTO;
 import com.clinicSys.dto.response.AppointmentWithDoctorDTO;
+import com.clinicSys.dto.response.PatientDTO;
 import com.clinicSys.dto.response.ReceptionistDashboardDTO;
+import com.clinicSys.dto.response.ServiceDTO;
+import com.clinicSys.dto.response.UserDTO;
 import com.clinicSys.repository.IAppointmentRepository;
 import com.clinicSys.repository.IBillRepository;
 import com.clinicSys.repository.IPatientRepository;
 import com.clinicSys.repository.IUserRepository;
 import com.clinicSys.service.IReceptionistService;
+import com.clinicSys.service.IServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,6 +44,9 @@ public class ReceptionistServiceImpl implements IReceptionistService {
 
     @Autowired
     private IBillRepository billRepository;
+
+    @Autowired
+    private IServiceService serviceService;
 
     @Override
     public ReceptionistDashboardDTO getDashboard() {
@@ -267,6 +278,92 @@ public class ReceptionistServiceImpl implements IReceptionistService {
         
         // Return updated appointment details
         return getAppointmentById(updatedAppointment.getAppointmentID());
+    }
+
+    @Override
+    public List<PatientDTO> searchPatientsByName(String name) {
+        List<Patient> patients = patientRepository.searchPatientsByName(name);
+        return patients.stream()
+            .map(this::convertPatientToDTO)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDTO> getAllDoctors() {
+        List<User> doctors = userRepository.findByRole(2); // Role 2 = Doctor
+        return doctors.stream()
+            .map(this::convertUserToDTO)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ServiceDTO> getAllServices() {
+        return serviceService.getAllServices();
+    }
+
+    @Override
+    public AppointmentWithDoctorDTO createAppointment(CreateAppointmentDTO createAppointmentDTO) {
+        // Get current authenticated receptionist
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new RuntimeException("Không tìm thấy thông tin xác thực. Vui lòng đăng nhập lại.");
+        }
+        
+        User currentUser = (User) authentication.getPrincipal();
+        int receptionistID = currentUser.getUserID();
+
+        // Validate patient exists
+        if (!patientRepository.findById(createAppointmentDTO.patientID()).isPresent()) {
+            throw new RuntimeException("Patient not found with ID: " + createAppointmentDTO.patientID());
+        }
+
+        // Validate doctor exists
+        if (!userRepository.findById(createAppointmentDTO.doctorID()).isPresent()) {
+            throw new RuntimeException("Doctor not found with ID: " + createAppointmentDTO.doctorID());
+        }
+
+        // Create new appointment
+        Appointment appointment = new Appointment();
+        appointment.setPatientID(createAppointmentDTO.patientID());
+        appointment.setDoctorID(createAppointmentDTO.doctorID());
+        appointment.setReceptionistID(receptionistID);
+        appointment.setDateTime(createAppointmentDTO.dateTime());
+        appointment.setStatus("Scheduled");
+
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+
+        // Convert to DTO
+        return convertToAppointmentWithDoctorDTO(savedAppointment);
+    }
+
+    private PatientDTO convertPatientToDTO(Patient patient) {
+        return new PatientDTO(
+            patient.getPatientID(),
+            patient.getPatientCode(),
+            patient.getFullName(),
+            patient.getDateOfBirth(),
+            patient.getGender(),
+            patient.getAddress(),
+            patient.getPhone(),
+            patient.getEmail()
+        );
+    }
+
+    private UserDTO convertUserToDTO(User user) {
+        String roleName = switch (user.getRole()) {
+            case 1 -> "Admin";
+            case 2 -> "Doctor";
+            case 3 -> "Receptionist";
+            default -> "Unknown";
+        };
+        
+        return new UserDTO(
+            user.getUserID(),
+            user.getFullName() != null ? user.getFullName() : user.getUsername(),
+            user.getEmail() != null ? user.getEmail() : "",
+            roleName,
+            user.getStatus() != null ? user.getStatus() : "Active"
+        );
     }
 }
 

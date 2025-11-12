@@ -91,5 +91,19 @@ public class PatientRepositoryImpl implements IPatientRepository {
         query.setParameter("searchTerm", searchPattern);
         return query.getResultList();
     }
+
+    @Override
+    public List<Patient> searchPatientsByName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return findAll();
+        }
+        String searchPattern = "%" + name.toLowerCase().trim() + "%";
+        TypedQuery<Patient> query = entityManager.createQuery(
+            "SELECT p FROM Patient p " +
+            "WHERE LOWER(p.fullName) LIKE :searchTerm " +
+            "ORDER BY p.fullName", Patient.class);
+        query.setParameter("searchTerm", searchPattern);
+        return query.getResultList();
+    }
 }
 
