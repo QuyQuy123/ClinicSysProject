@@ -52,5 +52,12 @@ public interface IPatientRepository {
      * @return Count of new patients
      */
     Long countNewPatientsByDateRange(java.time.LocalDateTime startDate, java.time.LocalDateTime endDate);
+    
+    /**
+     * Searches patients by name, phone, or patient code
+     * @param searchTerm Search term to match against name, phone, or patient code
+     * @return List of matching patients
+     */
+    List<Patient> searchPatients(String searchTerm);
 }
 

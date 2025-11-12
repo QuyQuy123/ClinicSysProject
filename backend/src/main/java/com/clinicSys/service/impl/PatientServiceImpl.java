@@ -2,6 +2,7 @@ package com.clinicSys.service.impl;
 
 import com.clinicSys.domain.Patient;
 import com.clinicSys.dto.request.CreatePatientDTO;
+import com.clinicSys.dto.request.UpdatePatientDTO;
 import com.clinicSys.dto.response.PatientDTO;
 import com.clinicSys.repository.IPatientRepository;
 import com.clinicSys.service.IPatientService;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientServiceImpl implements IPatientService {
@@ -66,6 +69,61 @@ public class PatientServiceImpl implements IPatientService {
         // Check if code already exists (very unlikely but check anyway)
         // Since we don't have findByPatientCode, we'll just use this format
         return code;
+    }
+
+    @Override
+    public List<PatientDTO> getAllPatients() {
+        List<Patient> patients = patientRepository.findAll();
+        return patients.stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public PatientDTO getPatientById(int patientId) {
+        Patient patient = patientRepository.findById(patientId)
+            .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + patientId));
+        return convertToDTO(patient);
+    }
+
+    @Override
+    public List<PatientDTO> searchPatients(String searchTerm) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            return getAllPatients();
+        }
+        List<Patient> patients = patientRepository.searchPatients(searchTerm.trim());
+        return patients.stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public PatientDTO updatePatient(int patientId, UpdatePatientDTO updatePatientDTO) {
+        Patient patient = patientRepository.findById(patientId)
+            .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + patientId));
+
+        // Check if phone is being changed and if new phone already exists
+        if (updatePatientDTO.phone() != null && !updatePatientDTO.phone().trim().equals(patient.getPhone())) {
+            patientRepository.findByPhone(updatePatientDTO.phone().trim())
+                .ifPresent(existingPatient -> {
+                    if (existingPatient.getPatientID() != patientId) {
+                        throw new RuntimeException("Số điện thoại đã tồn tại trong hệ thống");
+                    }
+                });
+        }
+
+        // Update patient fields
+        patient.setFullName(updatePatientDTO.fullName());
+        patient.setDateOfBirth(updatePatientDTO.dateOfBirth());
+        patient.setGender(updatePatientDTO.gender());
+        patient.setAddress(updatePatientDTO.address() != null ? updatePatientDTO.address().trim() : null);
+        patient.setPhone(updatePatientDTO.phone().trim());
+        patient.setEmail(updatePatientDTO.email() != null && !updatePatientDTO.email().trim().isEmpty() 
+            ? updatePatientDTO.email().trim() 
+            : null);
+
+        Patient updatedPatient = patientRepository.save(patient);
+        return convertToDTO(updatedPatient);
     }
 
     private PatientDTO convertToDTO(Patient patient) {

@@ -145,7 +145,7 @@ function ReceptionistDashboard() {
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="/receptionist/patients">
                                 <span className="icon">👤</span> Patients
                             </a>
                         </li>
