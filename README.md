@@ -112,7 +112,7 @@ spring.datasource.password=123456
 spring.datasource.driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver
 ```
 
-3. Cập nhật JWT secret (nếu cần):
+3. Cập nhật JWT secret ( không cần):
 ```properties
 jwt.secret=your-secret-key-here
 ```
@@ -122,7 +122,7 @@ jwt.secret=your-secret-key-here
 **Cách 1: Sử dụng Maven Wrapper (Khuyến nghị)**
 ```bash
 cd backend
-./mvnw spring-boot:run
+./mvnw spring-boot:run  => chạy lệnh này
 ```
 
 **Cách 2: Sử dụng Maven**
@@ -149,7 +149,7 @@ npm install
 
 2. Chạy development server:
 ```bash
-npm run dev
+npm run dev => chạy lenh này
 ```
 
 Frontend sẽ chạy tại: **http://localhost:5173** (hoặc port khác nếu 5173 đã được sử dụng)
@@ -162,7 +162,7 @@ Mở trình duyệt và truy cập: **http://localhost:5173**
 - Admin: `admin@example.com` / `password`
 - Doctor: `doctor@example.com` / `password`
 - Receptionist: `receptionist@example.com` / `password`
-
+  (check usename or email in database)
 ---
 
 ## 🏗️ Cấu trúc Backend
