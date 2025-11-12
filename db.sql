@@ -22,7 +22,7 @@ GO
 CREATE TABLE ServiceType (
     ServiceTypeID INT IDENTITY(1,1) PRIMARY KEY,
     TypeName NVARCHAR(255) NOT NULL UNIQUE,
-    Status VARCHAR(50) NOT NULL -- Đổi từ NVARCHAR sang VARCHAR
+    Status VARCHAR(50) NOT NULL
 );
 GO
 
@@ -30,7 +30,7 @@ GO
 CREATE TABLE MedicineGroup (
     MedicineGroupID INT IDENTITY(1,1) PRIMARY KEY,
     Name NVARCHAR(255) NOT NULL UNIQUE,
-    Status VARCHAR(50) NOT NULL -- Đổi từ NVARCHAR sang VARCHAR
+    Status VARCHAR(50) NOT NULL
 );
 GO
 
@@ -38,7 +38,7 @@ GO
 CREATE TABLE PaymentMethod (
     PaymentMethodID INT IDENTITY(1,1) PRIMARY KEY,
     MethodName NVARCHAR(255) NOT NULL UNIQUE,
-    Status VARCHAR(50) NOT NULL -- Đổi từ NVARCHAR sang VARCHAR
+    Status VARCHAR(50) NOT NULL
 );
 GO
 
@@ -73,7 +73,7 @@ CREATE TABLE [User] (
     RoleID INT NOT NULL,
     FullName NVARCHAR(255) NOT NULL,
     Email VARCHAR(255) NOT NULL UNIQUE,
-    Status VARCHAR(50) NOT NULL, -- Đổi từ NVARCHAR sang VARCHAR
+    Status VARCHAR(50) NOT NULL,
     CONSTRAINT FK_User_Role FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
 );
 GO
@@ -85,21 +85,23 @@ CREATE TABLE Service (
     ServiceTypeID INT NOT NULL,
     Name NVARCHAR(255) NOT NULL UNIQUE,
     Price DECIMAL(18, 2) NOT NULL,
-    Status VARCHAR(50) NOT NULL, -- Đổi từ NVARCHAR sang VARCHAR
+    Status VARCHAR(50) NOT NULL,
     CONSTRAINT FK_Service_ServiceType FOREIGN KEY (ServiceTypeID) REFERENCES ServiceType(ServiceTypeID)
 );
 GO
 
 -- Bảng Thuốc (Medicine)
+-- *** ĐÃ BỔ SUNG CỘT 'Unit' THEO YÊU CẦU CỦA BẠN ***
 CREATE TABLE Medicine (
     MedicineID INT IDENTITY(1,1) PRIMARY KEY,
     MedicineCode VARCHAR(50) NOT NULL UNIQUE,
     MedicineGroupID INT NOT NULL,
     Name NVARCHAR(255) NOT NULL,
     Strength NVARCHAR(100),
+    Unit NVARCHAR(50), -- <<< CỘT MỚI ĐÃ ĐƯỢC THÊM VÀO ĐỊNH NGHĨA
     Price DECIMAL(18, 2) NOT NULL,
     Stock INT NOT NULL,
-    Status VARCHAR(50) NOT NULL, -- Đổi từ NVARCHAR sang VARCHAR
+    Status VARCHAR(50) NOT NULL,
     CONSTRAINT FK_Medicine_MedicineGroup FOREIGN KEY (MedicineGroupID) REFERENCES MedicineGroup(MedicineGroupID)
 );
 GO
@@ -110,7 +112,7 @@ GO
 CREATE TABLE Appointment (
     AppointmentID INT IDENTITY(1,1) PRIMARY KEY,
     DateTime DATETIME2 NOT NULL,
-    Status VARCHAR(50) NOT NULL, -- Đổi từ NVARCHAR sang VARCHAR
+    Status VARCHAR(50) NOT NULL,
     PatientID INT NOT NULL,
     DoctorID INT NOT NULL,
     ReceptionistID INT NOT NULL,
@@ -138,7 +140,7 @@ GO
 CREATE TABLE Notification (
     ID INT IDENTITY(1,1) PRIMARY KEY,
     Type NVARCHAR(50) NOT NULL,
-    Status VARCHAR(50) NOT NULL, -- Đổi từ NVARCHAR sang VARCHAR
+    Status VARCHAR(50) NOT NULL,
     AppointmentID INT NOT NULL,
     CONSTRAINT FK_Notification_Appointment FOREIGN KEY (AppointmentID) REFERENCES Appointment(AppointmentID)
 );
@@ -149,7 +151,7 @@ CREATE TABLE Bill (
     BillID INT IDENTITY(1,1) PRIMARY KEY,
     InvoiceCode VARCHAR(50) NOT NULL UNIQUE,
     TotalAmount DECIMAL(18, 2) NOT NULL,
-    PaymentStatus VARCHAR(50) NOT NULL, -- Đổi từ NVARCHAR sang VARCHAR
+    PaymentStatus VARCHAR(50) NOT NULL,
     AppointmentID INT NOT NULL UNIQUE, -- Ràng buộc 1-1
     PaymentMethodID INT,
     DateIssued DATETIME2 NOT NULL,
@@ -160,7 +162,6 @@ CREATE TABLE Bill (
 GO
 
 -- Bảng Bệnh án/Phiếu khám (MedicalRecord)
--- ... (Giữ nguyên, không có status)
 CREATE TABLE MedicalRecord (
     RecordID INT IDENTITY(1,1) PRIMARY KEY,
     Vitals NVARCHAR(500),
@@ -176,7 +177,6 @@ CREATE TABLE MedicalRecord (
 GO
 
 -- Bảng Nối Dịch vụ - Lịch hẹn (Appointment_Service)
--- ... (Giữ nguyên)
 CREATE TABLE Appointment_Service (
     AppointmentServiceID INT IDENTITY(1,1) PRIMARY KEY,
     AppointmentID INT NOT NULL,
@@ -190,7 +190,6 @@ GO
 -- ===== BẢNG NHÓM 5: Phụ thuộc Nhóm 4 =====
 
 -- Bảng Chẩn đoán (Diagnosis)
--- ... (Giữ nguyên)
 CREATE TABLE Diagnosis (
     DiagnosisID INT IDENTITY(1,1) PRIMARY KEY,
     Description NVARCHAR(MAX),
@@ -205,7 +204,6 @@ CREATE TABLE Diagnosis (
 GO
 
 -- Bảng Đơn thuốc (Prescription)
--- ... (Giữ nguyên)
 CREATE TABLE Prescription (
     PrescriptionID INT IDENTITY(1,1) PRIMARY KEY,
     PrescriptionCode VARCHAR(50) NOT NULL UNIQUE,
@@ -222,7 +220,6 @@ GO
 -- ===== BẢNG NHÓM 6: Phụ thuộc Nhóm 5 =====
 
 -- Bảng Nối Đơn thuốc - Thuốc (Prescription_Medicine)
--- ... (Giữ nguyên)
 CREATE TABLE Prescription_Medicine (
     Prescription_MedicineID INT IDENTITY(1,1) PRIMARY KEY,
     PrescriptionID INT NOT NULL,
@@ -235,7 +232,7 @@ CREATE TABLE Prescription_Medicine (
 GO
 
 -- ===================================
--- ===== INSERT DỮ LIỆU (ENGLISH) =====
+-- ===== INSERT DỮ LIỆU (MASTER DATA) =====
 -- ===================================
 
 USE ClinicSysDB;
@@ -294,17 +291,6 @@ VALUES
 ('M54.5', N'Low back pain');
 GO
 
--- Bảng Bệnh nhân (Patient)
-PRINT 'Inserting data into Patient...';
-INSERT INTO Patient (PatientCode, FullName, DateOfBirth, Gender, Address, Phone, Email)
-VALUES
-('BN001', N'Nguyen Van An', '1990-01-15', N'Nam', N'123 Duong Lang, Ha Noi', '0912345671', 'an.nv@email.com'),
-('BN002', N'Tran Thi Binh', '1985-05-20', N'Nữ', N'456 Hai Ba Trung, TPHCM', '0912345672', 'binh.tt@email.com'),
-('BN003', N'Le Van Cuong', '2001-11-30', N'Nam', N'789 Nguyen Van Linh, Da Nang', '0912345673', 'cuong.lv@email.com'),
-('BN004', N'Pham Thi Dung', '1995-02-10', N'Nữ', N'101 Le Loi, Hai Phong', '0912345674', 'dung.pt@email.com'),
-('BN005', N'Hoang Van Em', '1978-07-07', N'Nam', N'202 Tran Phu, Can Tho', '0912345675', 'em.hv@email.com');
-GO
-
 -- Bảng Người dùng/Nhân viên (User)
 PRINT 'Inserting data into [User]...';
 INSERT INTO [User] (Username, PasswordHash, RoleID, FullName, Email, Status)
@@ -328,24 +314,38 @@ VALUES
 GO
 
 -- Bảng Thuốc (Medicine)
+-- *** ĐÃ BỔ SUNG GIÁ TRỊ CHO CỘT 'Unit' ***
 PRINT 'Inserting data into Medicine...';
-INSERT INTO Medicine (MedicineCode, MedicineGroupID, Name, Strength, Price, Stock, Status)
+INSERT INTO Medicine (MedicineCode, MedicineGroupID, Name, Strength, Unit, Price, Stock, Status)
 VALUES
-('AMOXI500', 1, N'Amoxicillin', N'500mg', 1500.00, 500, 'Active'),
-('PARA500', 2, N'Paracetamol', N'500mg', 1000.00, 1000, 'Active'),
-('AMLOR5', 4, N'Amlodipine', N'5mg', 3000.00, 300, 'Active'),
-('VITC1000', 3, N'Vitamin C', N'1000mg', 3000.00, 800, 'Active'),
-('OMEP20', 5, N'Omeprazole', N'20mg', 5000.00, 150, 'Active');
+('AMOXI500', 1, N'Amoxicillin', N'500mg', N'Viên', 1500.00, 500, 'Active'),
+('PARA500', 2, N'Paracetamol', N'500mg', N'Viên', 1000.00, 1000, 'Active'),
+('AMLOR5', 4, N'Amlodipine', N'5mg', N'Viên', 3000.00, 300, 'Active'),
+('VITC1000', 3, N'Vitamin C', N'1000mg', N'Viên sủi', 3000.00, 800, 'Active'),
+('OMEP20', 5, N'Omeprazole', N'20mg', N'Viên', 5000.00, 150, 'Active');
 GO
 
--- Bảng Lịch hẹn (Appointment)
-PRINT 'Inserting data into Appointment...';
+-- ==========================================================
+-- ===== INSERT DỮ LIỆU GỐC (5 BỆNH NHÂN ĐẦU TIÊN) =====
+-- ==========================================================
+PRINT 'Inserting original 5 patients (ID 1-5)...';
+INSERT INTO Patient (PatientCode, FullName, DateOfBirth, Gender, Address, Phone, Email)
+VALUES
+('BN001', N'Nguyen Van An', '1990-01-15', N'Nam', N'123 Duong Lang, Ha Noi', '0912345671', 'an.nv@email.com'),
+('BN002', N'Tran Thi Binh', '1985-05-20', N'Nữ', N'456 Hai Ba Trung, TPHCM', '0912345672', 'binh.tt@email.com'),
+('BN003', N'Le Van Cuong', '2001-11-30', N'Nam', N'789 Nguyen Van Linh, Da Nang', '0912345673', 'cuong.lv@email.com'),
+('BN004', N'Pham Thi Dung', '1995-02-10', N'Nữ', N'101 Le Loi, Hai Phong', '0912345674', 'dung.pt@email.com'),
+('BN005', N'Hoang Van Em', '1978-07-07', N'Nam', N'202 Tran Phu, Can Tho', '0912345675', 'em.hv@email.com');
+GO
+
+-- Bảng Lịch hẹn (Appointment) - Dữ liệu gốc
+PRINT 'Inserting original 5 appointments (ID 1-5)...';
 INSERT INTO Appointment (DateTime, Status, PatientID, DoctorID, ReceptionistID)
 VALUES
 ('2025-11-10 09:00:00', 'Completed', 1, 2, 3),
-('2025-11-10 10:00:00', 'Completed', 2, 4, 5),
+('2025-11-10 10:00:00', 'Completed', 2, 4, 3), -- Sửa 5 thành 3 (letan.tuan inactive)
 ('2025-11-11 09:30:00', 'Completed', 3, 2, 3),
-('2025-11-11 11:00:00', 'Completed', 4, 4, 5),
+('2025-11-11 11:00:00', 'Completed', 4, 4, 3), -- Sửa 5 thành 3
 ('2025-11-12 14:00:00', 'Completed', 5, 2, 3);
 GO
 
@@ -437,6 +437,82 @@ VALUES
 (4, 5, 14, N'Take 1 pill/day 30min before breakfast'); -- P4, Omeprazole
 GO
 
-ALTER TABLE Medicine ADD Unit NVARCHAR(50);
 
-PRINT 'All data inserted successfully (English version)!';
+-- ==========================================================
+-- ===== INSERT DỮ LIỆU MỚI (20 BỆNH NHÂN VÀ 20 LỊCH HẸN MỚI) =====
+-- ==========================================================
+PRINT 'Inserting 20 new patients (ID 6 to 25)...';
+GO
+INSERT INTO Patient (PatientCode, FullName, DateOfBirth, Gender, Address, Phone, Email)
+VALUES
+-- 10 Bệnh nhân cho Bác sĩ Khoa (ID 6-15)
+('BN006', N'Trần Minh Tuấn', '1988-05-10', N'Nam', N'11 Lý Thường Kiệt, Hà Nội', '0987654321', 'tuan.tm@email.com'),
+('BN007', N'Lê Thị Thu Hà', '1992-09-20', N'Nữ', N'22 Trần Hưng Đạo, Hà Nội', '0987654322', 'ha.ltt@email.com'),
+('BN008', N'Phạm Văn Hùng', '1975-02-15', N'Nam', N'33 Hai Bà Trưng, Hà Nội', '0987654323', 'hung.pv@email.com'),
+('BN009', N'Nguyễn Thị Lan Anh', '2001-11-30', N'Nữ', N'44 Quang Trung, Hà Nội', '0987654324', 'lananh.nt@email.com'),
+('BN010', N'Vũ Đức Thắng', '1995-07-07', N'Nam', N'55 Bà Triệu, Hà Nội', '0987654325', 'thang.vd@email.com'),
+('BN011', N'Đỗ Phương Mai', '1983-01-25', N'Nữ', N'66 Bạch Mai, Hà Nội', '0987654326', 'mai.dp@email.com'),
+('BN012', N'Hoàng Văn Nam', '1990-03-12', N'Nam', N'77 Xã Đàn, Hà Nội', '0987654327', 'nam.hv@email.com'),
+('BN013', N'Bùi Thanh Thảo', '1998-08-19', N'Nữ', N'88 Kim Mã, Hà Nội', '0987654328', 'thao.bt@email.com'),
+('BN014', N'Đặng Quang Vinh', '1979-12-05', N'Nam', N'99 Nguyễn Chí Thanh, Hà Nội', '0987654329', 'vinh.dq@email.com'),
+('BN015', N'Lý Bảo Ngọc', '2003-04-18', N'Nữ', N'110 Láng Hạ, Hà Nội', '0987654330', 'ngoc.lb@email.com'),
+
+-- 10 Bệnh nhân cho Bác sĩ Linh (ID 16-25)
+('BN016', N'Hồ Anh Dũng', '1985-06-22', N'Nam', N'121 Nguyễn Văn Cừ, TPHCM', '0911111111', 'dung.ha@email.com'),
+('BN017', N'Nguyễn Ngọc Bích', '1993-10-14', N'Nữ', N'122 Võ Thị Sáu, TPHCM', '0911111112', 'bich.nn@email.com'),
+('BN018', N'Trần Quốc Bảo', '1997-01-09', N'Nam', N'123 Điện Biên Phủ, TPHCM', '0911111113', 'bao.tq@email.com'),
+('BN019', N'Lê Minh Châu', '1980-07-28', N'Nữ', N'124 Đồng Khởi, TPHCM', '0911111114', 'chau.lm@email.com'),
+('BN020', N'Phạm Gia Khiêm', '2000-02-20', N'Nam', N'125 Pasteur, TPHCM', '0911111115', 'khiem.pg@email.com'),
+('BN021', N'Vũ Kiều Trang', '1996-09-03', N'Nữ', N'126 Nam Kỳ Khởi Nghĩa, TPHCM', '0911111116', 'trang.vk@email.com'),
+('BN022', N'Đặng Minh Khôi', '1989-11-17', N'Nam', N'127 Lê Lợi, TPHCM', '0911111117', 'khoi.dm@email.com'),
+('BN023', N'Ngô Tố Uyên', '1994-05-23', N'Nữ', N'128 Hai Bà Trưng, TPHCM', '0911111118', 'uyen.nt@email.com'),
+('BN024', N'Bùi Thế Hiển', '1978-12-31', N'Nam', N'129 Nguyễn Huệ, TPHCM', '0911111119', 'hien.bt@email.com'),
+('BN025', N'Đỗ Thùy Linh', '1999-08-08', N'Nữ', N'130 Cách Mạng Tháng 8, TPHCM', '0911111120', 'linh.dt@email.com');
+GO
+
+PRINT '20 new patients inserted successfully (ID 6-25).';
+GO
+
+-- ===== Bác sĩ Lê Minh Khoa (DoctorID = 2) - 10 Lịch hẹn (PatientID 6-15) =====
+PRINT 'Inserting 20 new appointments for 2025-11-13 (ID 6-25)...';
+GO
+INSERT INTO Appointment (DateTime, Status, PatientID, DoctorID, ReceptionistID)
+VALUES
+-- Completed (Sáng)
+('2025-11-13 08:00:00', 'Completed', 6, 2, 3),  -- Trần Minh Tuấn
+('2025-11-13 08:30:00', 'Completed', 7, 2, 3),  -- Lê Thị Thu Hà
+('2025-11-13 09:00:00', 'Completed', 8, 2, 3),  -- Phạm Văn Hùng
+-- In Consultation (Đang khám)
+('2025-11-13 09:30:00', 'In Consultation', 9, 2, 3), -- Nguyễn Thị Lan Anh
+-- Checked-in (Đang chờ)
+('2025-11-13 10:00:00', 'Checked-in', 10, 2, 3), -- Vũ Đức Thắng
+('2025-11-13 10:15:00', 'Checked-in', 11, 2, 3), -- Đỗ Phương Mai
+-- Scheduled (Chiều)
+('2025-11-13 14:00:00', 'Scheduled', 12, 2, 3), -- Hoàng Văn Nam
+('2025-11-13 14:30:00', 'Scheduled', 13, 2, 3), -- Bùi Thanh Thảo
+('2025-11-13 15:00:00', 'Scheduled', 14, 2, 3), -- Đặng Quang Vinh
+('2025-11-13 15:30:00', 'Scheduled', 15, 2, 3); -- Lý Bảo Ngọc
+GO
+
+-- ===== Bác sĩ Trần Thùy Linh (DoctorID = 4) - 10 Lịch hẹn (PatientID 16-25) =====
+INSERT INTO Appointment (DateTime, Status, PatientID, DoctorID, ReceptionistID)
+VALUES
+-- Completed (Sáng)
+('2025-11-13 08:15:00', 'Completed', 16, 4, 3), -- Hồ Anh Dũng
+('2025-11-13 08:45:00', 'Completed', 17, 4, 3), -- Nguyễn Ngọc Bích
+('2025-11-13 09:15:00', 'Completed', 18, 4, 3), -- Trần Quốc Bảo
+-- In Consultation (Đang khám)
+('2025-11-13 09:45:00', 'In Consultation', 19, 4, 3), -- Lê Minh Châu
+-- Checked-in (Đang chờ)
+('2025-11-13 10:30:00', 'Checked-in', 20, 4, 3), -- Phạm Gia Khiêm
+('2025-11-13 10:45:00', 'Checked-in', 21, 4, 3), -- Vũ Kiều Trang
+-- Scheduled (Chiều)
+('2025-11-13 14:15:00', 'Scheduled', 22, 4, 3), -- Đặng Minh Khôi
+('2025-11-13 14:45:00', 'Scheduled', 23, 4, 3), -- Ngô Tố Uyên
+('2025-11-13 15:15:00', 'Scheduled', 24, 4, 3), -- Bùi Thế Hiển
+('2025-11-13 15:45:00', 'Scheduled', 25, 4, 3); -- Đỗ Thùy Linh
+GO
+
+
+PRINT 'All data inserted successfully! (Total 25 patients, 25 appointments)';
+GO

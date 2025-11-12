@@ -1,18 +1,13 @@
 import React from 'react';
-import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import LogoutButton from '../LogoutButton';
 import './AdminLayout.css';
 
 function AdminLayout() {
-    const navigate = useNavigate();
     const location = useLocation();
-    const { logout, user } = useAuth();
+    const { user } = useAuth();
 
-    const handleLogout = () => {
-        logout();
-        // Clear any location state and navigate to login
-        navigate('/login', { replace: true, state: null });
-    };
     const isActive = (path) => {
         return location.pathname === path || location.pathname.startsWith(path + '/');
     };
@@ -66,9 +61,9 @@ function AdminLayout() {
                         </li>
                     </ul>
                 </nav>
-                <button onClick={handleLogout} className="logout-btn">
-                    Logout
-                </button>
+                <div style={{ marginTop: 'auto', padding: '20px' }}>
+                    <LogoutButton />
+                </div>
             </div>
             <main className="main-content">
                 <Outlet />

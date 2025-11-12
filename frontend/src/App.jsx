@@ -29,7 +29,9 @@ import UpdateConsultation from './pages/doctor/UpdateConsultation';
 import CreatePrescription from './pages/doctor/CreatePrescription';
 import UpdatePrescription from './pages/doctor/UpdatePrescription';
 
-function ReceptionistDashboard() { return <div><h1>Receptionist Dashboard</h1></div>; }
+// Receptionist pages
+import ReceptionistDashboard from './pages/receptionist/ReceptionistDashboard';
+
 function ForgotPassword() { return <div><h1>Quên mật khẩu</h1></div>; }
 
 
