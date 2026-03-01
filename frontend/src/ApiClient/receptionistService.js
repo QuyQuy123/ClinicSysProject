@@ -78,3 +78,42 @@ export const createAppointment = async (appointmentData) => {
     return response.data;
 };
 
+/**
+ * Get billing details for an appointment (diagnosis + prescription + total)
+ * @param {number} appointmentId - Appointment ID
+ * @returns {Promise} Billing details
+ */
+export const getBillingDetails = async (appointmentId) => {
+    const response = await apiClient.get(`/receptionist/billing/${appointmentId}`);
+    return response.data;
+};
+
+/**
+ * Confirm payment for an appointment
+ * @param {number} appointmentId - Appointment ID
+ * @returns {Promise} Billing details after confirmation
+ */
+export const confirmBillingPayment = async (appointmentId) => {
+    const response = await apiClient.post(`/receptionist/billing/${appointmentId}/confirm`);
+    return response.data;
+};
+
+/**
+ * Get all paid bills
+ * @returns {Promise} List of paid bills
+ */
+export const getPaidBills = async () => {
+    const response = await apiClient.get('/receptionist/bills/paid');
+    return response.data;
+};
+
+/**
+ * Get paid bill details by bill ID
+ * @param {number} billId
+ * @returns {Promise} Bill details including patient info
+ */
+export const getPaidBillDetails = async (billId) => {
+    const response = await apiClient.get(`/receptionist/bills/${billId}`);
+    return response.data;
+};
+

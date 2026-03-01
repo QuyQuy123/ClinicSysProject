@@ -162,9 +162,9 @@ function AppointmentList() {
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <Link to="/receptionist/billing">
                                 <span className="icon">💳</span> Billing
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </nav>

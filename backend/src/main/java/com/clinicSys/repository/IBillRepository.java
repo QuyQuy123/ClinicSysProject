@@ -31,6 +31,19 @@ public interface IBillRepository {
      * @return List of all bills
      */
     List<Bill> findAll();
+
+    /**
+     * Finds a bill by appointment ID
+     * @param appointmentID Appointment ID
+     * @return Optional containing the bill if found, empty otherwise
+     */
+    Optional<Bill> findByAppointmentID(int appointmentID);
+
+    /**
+     * Retrieves paid bills ordered by payment time desc
+     * @return List of paid bills
+     */
+    List<Bill> findPaidBills();
     
     /**
      * Gets total revenue by date range (only paid bills)

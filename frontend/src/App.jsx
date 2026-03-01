@@ -33,6 +33,10 @@ import UpdatePrescription from './pages/doctor/UpdatePrescription';
 import ReceptionistDashboard from './pages/receptionist/ReceptionistDashboard';
 import PatientList from './pages/receptionist/PatientList';
 import AppointmentList from './pages/receptionist/AppointmentList';
+import BillingPage from './pages/receptionist/BillingPage';
+import BillingPrintPage from './pages/receptionist/BillingPrintPage';
+import BillingListPage from './pages/receptionist/BillingListPage';
+import PaidBillDetailPage from './pages/receptionist/PaidBillDetailPage';
 
 function ForgotPassword() { return <div><h1>Quên mật khẩu</h1></div>; }
 
@@ -107,6 +111,38 @@ export default function App() {
                         <AppointmentList />
                     </ProtectedRoute>
                 } 
+            />
+            <Route
+                path="/receptionist/billing"
+                element={
+                    <ProtectedRoute requiredRole="Receptionist">
+                        <BillingListPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/receptionist/billing/invoice/:billId"
+                element={
+                    <ProtectedRoute requiredRole="Receptionist">
+                        <PaidBillDetailPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/receptionist/billing/:appointmentId"
+                element={
+                    <ProtectedRoute requiredRole="Receptionist">
+                        <BillingPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/receptionist/billing/:appointmentId/print"
+                element={
+                    <ProtectedRoute requiredRole="Receptionist">
+                        <BillingPrintPage />
+                    </ProtectedRoute>
+                }
             />
 
             {/* Route mặc định */}

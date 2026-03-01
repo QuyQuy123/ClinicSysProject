@@ -44,6 +44,29 @@ public class BillRepositoryImpl implements IBillRepository {
     }
 
     @Override
+    public Optional<Bill> findByAppointmentID(int appointmentID) {
+        TypedQuery<Bill> query = entityManager.createQuery(
+            "SELECT b FROM Bill b WHERE b.appointmentID = :appointmentID",
+            Bill.class
+        );
+        query.setParameter("appointmentID", appointmentID);
+        List<Bill> results = query.getResultList();
+        if (results == null || results.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(results.get(0));
+    }
+
+    @Override
+    public List<Bill> findPaidBills() {
+        TypedQuery<Bill> query = entityManager.createQuery(
+            "SELECT b FROM Bill b WHERE TRIM(LOWER(b.paymentStatus)) = 'paid' ORDER BY b.datePaid DESC, b.dateIssued DESC",
+            Bill.class
+        );
+        return query.getResultList();
+    }
+
+    @Override
     public BigDecimal getTotalRevenueByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         TypedQuery<BigDecimal> query = entityManager.createQuery(
             "SELECT COALESCE(SUM(b.totalAmount), 0) FROM Bill b " +

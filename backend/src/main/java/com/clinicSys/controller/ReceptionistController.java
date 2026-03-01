@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.clinicSys.dto.request.CreateAppointmentDTO;
 import com.clinicSys.dto.response.AppointmentDetailsDTO;
+import com.clinicSys.dto.response.BillingDetailsDTO;
+import com.clinicSys.dto.response.PaidBillDetailDTO;
+import com.clinicSys.dto.response.PaidBillSummaryDTO;
 import com.clinicSys.dto.response.PatientDTO;
 import com.clinicSys.dto.response.ReceptionistDashboardDTO;
 import com.clinicSys.dto.response.ServiceDTO;
@@ -128,6 +131,54 @@ public class ReceptionistController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse("Lỗi khi tạo lịch hẹn: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/billing/{appointmentId}")
+    public ResponseEntity<?> getBillingDetails(@PathVariable int appointmentId) {
+        try {
+            BillingDetailsDTO details = receptionistService.getBillingDetails(appointmentId);
+            return ResponseEntity.ok(details);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Lỗi khi lấy dữ liệu thanh toán: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/billing/{appointmentId}/confirm")
+    public ResponseEntity<?> confirmPayment(@PathVariable int appointmentId) {
+        try {
+            BillingDetailsDTO details = receptionistService.confirmPayment(appointmentId);
+            return ResponseEntity.ok(details);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Lỗi khi xác nhận thanh toán: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/bills/paid")
+    public ResponseEntity<?> getPaidBills() {
+        try {
+            List<PaidBillSummaryDTO> bills = receptionistService.getPaidBills();
+            return ResponseEntity.ok(bills);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Lỗi khi lấy danh sách hóa đơn: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/bills/{billId}")
+    public ResponseEntity<?> getPaidBillDetails(@PathVariable int billId) {
+        try {
+            PaidBillDetailDTO bill = receptionistService.getPaidBillDetails(billId);
+            return ResponseEntity.ok(bill);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Lỗi khi lấy chi tiết hóa đơn: " + e.getMessage()));
         }
     }
 

@@ -6,6 +6,9 @@ import java.util.List;
 import com.clinicSys.dto.request.CreateAppointmentDTO;
 import com.clinicSys.dto.response.AppointmentDetailsDTO;
 import com.clinicSys.dto.response.AppointmentWithDoctorDTO;
+import com.clinicSys.dto.response.BillingDetailsDTO;
+import com.clinicSys.dto.response.PaidBillDetailDTO;
+import com.clinicSys.dto.response.PaidBillSummaryDTO;
 import com.clinicSys.dto.response.PatientDTO;
 import com.clinicSys.dto.response.ReceptionistDashboardDTO;
 import com.clinicSys.dto.response.ServiceDTO;
@@ -20,5 +23,9 @@ public interface IReceptionistService {
     List<UserDTO> getAllDoctors();
     List<ServiceDTO> getAllServices();
     AppointmentWithDoctorDTO createAppointment(CreateAppointmentDTO createAppointmentDTO);
+    BillingDetailsDTO getBillingDetails(int appointmentId);
+    BillingDetailsDTO confirmPayment(int appointmentId);
+    List<PaidBillSummaryDTO> getPaidBills();
+    PaidBillDetailDTO getPaidBillDetails(int billId);
 }
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { getReceptionistDashboard } from '../../ApiClient/receptionistService';
 import LogoutButton from '../../components/LogoutButton';
 import AddPatientModal from '../../components/AddPatientModal';
@@ -6,6 +7,7 @@ import BookAppointmentModal from '../../components/BookAppointmentModal';
 import './ReceptionistDashboard.css';
 
 function ReceptionistDashboard() {
+    const navigate = useNavigate();
     const [dashboardData, setDashboardData] = useState({
         appointmentsToday: 0,
         totalSlotsToday: 0,
@@ -56,6 +58,8 @@ function ReceptionistDashboard() {
             return 'status status-confirmed';
         } else if (statusLower.includes('in consultation')) {
             return 'status status-in-consultation';
+        } else if (statusLower.includes('paid')) {
+            return 'status status-paid';
         } else if (statusLower.includes('completed')) {
             return 'status status-ready-billing';
         } else if (statusLower.includes('waiting')) {
@@ -74,6 +78,8 @@ function ReceptionistDashboard() {
             return 'Checked-in';
         } else if (statusLower.includes('in consultation')) {
             return 'In Consultation';
+        } else if (statusLower.includes('paid')) {
+            return 'Đã thanh toán';
         } else if (statusLower.includes('completed')) {
             return 'Completed';
         } else if (statusLower.includes('waiting')) {
@@ -82,6 +88,16 @@ function ReceptionistDashboard() {
             return 'Ready for Billing';
         }
         return status || 'Unknown';
+    };
+
+    const isBillableStatus = (status) => {
+        const statusLower = status?.toLowerCase() || '';
+        if (statusLower.includes('paid')) return false;
+        return statusLower.includes('completed') || statusLower.includes('ready for billing');
+    };
+
+    const goToBilling = (appointmentID) => {
+        navigate(`/receptionist/billing/${appointmentID}`);
     };
 
     const fetchDashboard = async () => {
@@ -162,9 +178,9 @@ function ReceptionistDashboard() {
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <Link to="/receptionist/billing">
                                 <span className="icon">💳</span> Billing
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </nav>
@@ -218,12 +234,13 @@ function ReceptionistDashboard() {
                                 <th>Patient Name</th>
                                 <th>Doctor</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {dashboardData.todayAppointments.length === 0 ? (
                                 <tr>
-                                    <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
+                                    <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
                                         Không có lịch hẹn nào trong ngày
                                     </td>
                                 </tr>
@@ -237,6 +254,26 @@ function ReceptionistDashboard() {
                                             <span className={getStatusClass(appointment.status)}>
                                                 {getStatusDisplay(appointment.status)}
                                             </span>
+                                        </td>
+                                        <td>
+                                            {isBillableStatus(appointment.status) ? (
+                                                <button
+                                                    onClick={() => goToBilling(appointment.appointmentID)}
+                                                    style={{
+                                                        padding: '6px 10px',
+                                                        borderRadius: '8px',
+                                                        border: '0',
+                                                        background: '#2e7d32',
+                                                        color: '#fff',
+                                                        cursor: 'pointer',
+                                                        fontWeight: 600
+                                                    }}
+                                                >
+                                                    Thanh toán
+                                                </button>
+                                            ) : (
+                                                <span style={{ color: '#98a2b3' }}>—</span>
+                                            )}
                                         </td>
                                     </tr>
                                 ))
@@ -254,12 +291,13 @@ function ReceptionistDashboard() {
                                 <th>Patient Name</th>
                                 <th>Doctor</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {dashboardData.liveQueue.length === 0 ? (
                                 <tr>
-                                    <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
+                                    <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
                                         Không có bệnh nhân trong hàng chờ
                                     </td>
                                 </tr>
@@ -273,6 +311,26 @@ function ReceptionistDashboard() {
                                             <span className={getStatusClass(appointment.status)}>
                                                 {getStatusDisplay(appointment.status)}
                                             </span>
+                                        </td>
+                                        <td>
+                                            {isBillableStatus(appointment.status) ? (
+                                                <button
+                                                    onClick={() => goToBilling(appointment.appointmentID)}
+                                                    style={{
+                                                        padding: '6px 10px',
+                                                        borderRadius: '8px',
+                                                        border: '0',
+                                                        background: '#2e7d32',
+                                                        color: '#fff',
+                                                        cursor: 'pointer',
+                                                        fontWeight: 600
+                                                    }}
+                                                >
+                                                    Thanh toán
+                                                </button>
+                                            ) : (
+                                                <span style={{ color: '#98a2b3' }}>—</span>
+                                            )}
                                         </td>
                                     </tr>
                                 ))

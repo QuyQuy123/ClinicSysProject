@@ -201,6 +201,10 @@
     background-color: #20c997;
 }
 
+.receptionist-dashboard .status-paid {
+    background-color: #198754;
+}
+
 .receptionist-dashboard .loading-container,
 .receptionist-dashboard .error-container {
     display: flex;
